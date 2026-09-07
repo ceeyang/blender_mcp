@@ -152,7 +152,6 @@ uv run blender-mcp-pro dump-tools > docs/tools.md  # 重新生成工具清单
 - 改了 server 代码：Claude Code 里 `/mcp` 重启该 server。
 - 新增工具：`addon/blender_mcp_pro/handlers/<类目>.py` 里 `@command("name")`，`src/blender_mcp_pro/tools/<类目>.py` 里 `@mcp.tool()`；`tests/test_parity.py` 会盯住两边名字一致。
 - handler 模块**顶层不能调用 bpy**（对账测试用假 bpy 加载插件），只在函数体里用。
-- 维护笔记与踩坑记录：[.claude/MAINTENANCE.md](.claude/MAINTENANCE.md)、[.claude/PITFALLS.md](.claude/PITFALLS.md)。
 
 ## 已知限制
 
