@@ -1,0 +1,10 @@
+schema_version = "1.0.0"
+id = "blender_mcp_pro"
+version = "0.1.0"
+name = "Blender MCP Pro (local)"
+tagline = "Drive Blender from Claude Code over local MCP"
+maintainer = "panda"
+type = "add-on"
+blender_version_min = "5.2.0"
+license = ["SPDX:MIT"]
+tags = ["Pipeline"]
