@@ -15,6 +15,8 @@ from . import io  # noqa: E402,F401
 from . import animation  # noqa: E402,F401
 from . import uv_texture  # noqa: E402,F401
 from . import batch  # noqa: E402,F401
+from . import rigging  # noqa: E402,F401
+from . import rig_diagnostics  # noqa: E402,F401
 
 
 def tool_names() -> set[str]:

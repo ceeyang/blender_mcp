@@ -12,3 +12,5 @@ from . import io  # noqa: F401
 from . import animation  # noqa: F401
 from . import uv_texture  # noqa: F401
 from . import batch  # noqa: F401
+from . import rigging  # noqa: F401
+from . import rig_diagnostics  # noqa: F401
