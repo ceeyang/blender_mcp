@@ -2,7 +2,8 @@ import asyncio
 
 from ..server import mcp
 
-# 类目模块（每个类目追加一行）
+from . import scene  # noqa: E402,F401
+from . import utilities  # noqa: E402,F401
 
 
 def tool_names() -> set[str]:
