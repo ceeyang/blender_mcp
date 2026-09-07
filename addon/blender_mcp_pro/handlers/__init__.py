@@ -10,3 +10,5 @@ from . import camera  # noqa: F401
 from . import render  # noqa: F401
 from . import io  # noqa: F401
 from . import animation  # noqa: F401
+from . import uv_texture  # noqa: F401
+from . import batch  # noqa: F401

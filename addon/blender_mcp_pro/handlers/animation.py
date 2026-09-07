@@ -24,6 +24,7 @@ def _fcurves(o):
 
 
 def _set_path(o, data_path: str, value, index=None):
+    data_path = data_path.replace("['", '["').replace("']", '"]')  # path_resolve 只认双引号
     if data_path.startswith("["):
         key = data_path.strip("[]").strip("\"'")
         o[key] = value

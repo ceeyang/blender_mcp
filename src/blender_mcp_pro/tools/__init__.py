@@ -13,6 +13,8 @@ from . import camera  # noqa: E402,F401
 from . import render  # noqa: E402,F401
 from . import io  # noqa: E402,F401
 from . import animation  # noqa: E402,F401
+from . import uv_texture  # noqa: E402,F401
+from . import batch  # noqa: E402,F401
 
 
 def tool_names() -> set[str]:
