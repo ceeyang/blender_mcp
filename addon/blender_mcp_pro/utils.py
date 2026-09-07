@@ -126,7 +126,9 @@ def vec(v) -> list[float]:
 
 
 def serialize(value: Any) -> Any:
-    if value is None or isinstance(value, (bool, int, float, str)):
+    if isinstance(value, float):
+        return round(value, 6)
+    if value is None or isinstance(value, (bool, int, str)):
         return value
     if isinstance(value, (mathutils.Vector, mathutils.Euler, mathutils.Color, mathutils.Quaternion)):
         return vec(value)
