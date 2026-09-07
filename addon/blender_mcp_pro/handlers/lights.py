@@ -4,7 +4,7 @@ from __future__ import annotations
 import bpy
 
 from ..registry import command
-from ..utils import ToolError, abs_path, color4, enum_check, find_light, link_to_scene, look_at, obj_brief, vec
+from ..utils import ToolError, abs_path, color4, enum_check, find_light, link_to_scene, look_at, obj_brief, serialize, vec
 
 _LIGHT_TYPES = ["POINT", "SUN", "SPOT", "AREA"]
 
@@ -20,7 +20,7 @@ def light_info(o) -> dict:
         d.update({"size": light.size, "size_y": light.size_y, "shape": light.shape})
     elif light.type == "SUN":
         d.update({"angle": light.angle})
-    return d
+    return serialize(d)
 
 
 @command("list_lights", mutates=False)

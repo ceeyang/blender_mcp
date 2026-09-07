@@ -7,6 +7,9 @@ from . import utilities  # noqa: E402,F401
 from . import materials  # noqa: E402,F401
 from . import shader_nodes  # noqa: E402,F401
 from . import lights  # noqa: E402,F401
+from . import modifiers  # noqa: E402,F401
+from . import geometry_nodes  # noqa: E402,F401
+from . import camera  # noqa: E402,F401
 
 
 def tool_names() -> set[str]:

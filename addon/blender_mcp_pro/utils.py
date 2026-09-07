@@ -203,9 +203,15 @@ def mode(obj: bpy.types.Object, target: str = "EDIT"):
         select_only(keep, prev_active if prev_active and prev_active.name in bpy.data.objects else None)
 
 
+def refresh():
+    """同一 handler 里改完 location 立刻读 matrix_world 会是旧值，先让 depsgraph 评估一次。"""
+    bpy.context.view_layer.update()
+
+
 def target_point(target) -> mathutils.Vector:
     """对象名 → 世界坐标；[x,y,z] → Vector。"""
     if isinstance(target, str):
+        refresh()
         return find_object(target).matrix_world.translation.copy()
     if isinstance(target, (list, tuple)) and len(target) == 3:
         return mathutils.Vector(target)
@@ -229,6 +235,7 @@ def look_at(obj: bpy.types.Object, target, use_constraint: bool = False) -> dict
         c.track_axis = "TRACK_NEGATIVE_Z"
         c.up_axis = "UP_Y"
         return {"constraint": c.name, "target": tgt.name}
+    refresh()
     direction = target_point(target) - obj.matrix_world.translation
     if direction.length == 0:
         raise ToolError("object is at the target position; cannot orient")

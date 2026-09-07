@@ -12,7 +12,7 @@ import mathutils
 from mathutils import Vector
 
 from ..registry import command
-from ..utils import ToolError, abs_path, find_object, resolve_objects, rna_props, select_only, serialize, target_point, vec
+from ..utils import ToolError, abs_path, find_object, refresh, resolve_objects, rna_props, select_only, serialize, target_point, vec
 
 
 @command("execute_code")
@@ -186,6 +186,7 @@ def measure_distance(a, b):
 @command("get_bounding_box", mutates=False)
 def get_bounding_box(objects, world: bool = True):
     objs = resolve_objects(objects)
+    refresh()
     pts = []
     for o in objs:
         for c in o.bound_box:

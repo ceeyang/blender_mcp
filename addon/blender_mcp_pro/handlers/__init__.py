@@ -4,3 +4,6 @@ from . import utilities  # noqa: F401
 from . import materials  # noqa: F401
 from . import shader_nodes  # noqa: F401
 from . import lights  # noqa: F401
+from . import modifiers  # noqa: F401
+from . import geometry_nodes  # noqa: F401
+from . import camera  # noqa: F401
