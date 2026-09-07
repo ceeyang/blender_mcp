@@ -7,22 +7,25 @@ import zipfile
 from ..assets import polyhaven, sketchfab
 from ..assets.cache import cache_path
 from ..server import mcp
-from ._base import LONG, call
+from ._base import LONG, call, surface_errors
 
 
 @mcp.tool()
+@surface_errors
 def polyhaven_categories(asset_type: str = "hdris") -> dict:
     """Poly Haven 分类及数量。asset_type: hdris/textures/models。"""
     return polyhaven.categories(asset_type)
 
 
 @mcp.tool()
+@surface_errors
 def polyhaven_search(asset_type: str = "hdris", categories: list[str] | None = None, query: str | None = None, limit: int = 20) -> list[dict]:
     """搜索 Poly Haven 资产（按分类/关键词），按下载量排序。"""
     return polyhaven.search(asset_type, categories, query, limit)
 
 
 @mcp.tool()
+@surface_errors
 def polyhaven_download(asset_id: str, asset_type: str, resolution: str = "1k", file_format: str | None = None) -> dict:
     """下载 Poly Haven 资产并导入：HDRI→世界光；纹理→PBR 材质；模型→导入场景。resolution: 1k/2k/4k/8k。"""
     info = polyhaven.download_asset(asset_id, asset_type, resolution, file_format)
@@ -38,12 +41,14 @@ def polyhaven_download(asset_id: str, asset_type: str, resolution: str = "1k", f
 
 
 @mcp.tool()
+@surface_errors
 def sketchfab_search(query: str, categories: list[str] | None = None, count: int = 20, downloadable: bool = True) -> list[dict]:
     """搜索 Sketchfab 模型。"""
     return sketchfab.search(query, categories, count, downloadable)
 
 
 @mcp.tool()
+@surface_errors
 def sketchfab_download(uid: str) -> dict:
     """下载 Sketchfab 模型（glb）并导入。需要在插件偏好里填 Sketchfab API token（或环境变量 SKETCHFAB_API_TOKEN）。"""
     token = call("get_secret", key="sketchfab_token") or os.environ.get("SKETCHFAB_API_TOKEN")

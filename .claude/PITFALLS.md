@@ -32,3 +32,9 @@
 ## [2026-09-07] 对账测试用假 bpy 加载插件，handler 顶层不能碰 bpy
 症状：某 handler 模块顶层写了 `bpy.types.X.bl_rna...` 常量，`test_parity` 直接 AttributeError。
 规则：枚举/RNA 表一律放函数里并做模块级缓存（见 modifiers.py `_TYPES_CACHE`、nodes_common.py `_base_props()`）。
+
+## [2026-09-07] mcp 2.x 把普通异常吞成 "Error executing tool <name>"
+症状：stdio 端到端里 `get_object_info("Nope")` 回给模型的只有 "Error executing tool get_object_info"，候选名提示全丢。
+根因：`MCPServer` 只把 `mcp.server.mcpserver.exceptions.ToolError` 的消息放进 `content`（`is_error=True`），其它异常按 crash 处理、只记日志。
+规则：server 侧工具的所有异常都要转成 `ToolError`——`tools/_base.py::call` 统一包了 Blender 侧错误，不走 `call()` 的工具用 `@surface_errors`。
+涉及：src/blender_mcp_pro/tools/_base.py, tools/assets.py, tests/test_mcp_stdio.py
