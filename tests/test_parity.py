@@ -8,6 +8,9 @@ import types
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
+# 联网工具只存在于 server 进程（spec §1「联网边界」），插件侧没有对应 handler
+SERVER_ONLY = {"polyhaven_categories", "polyhaven_search", "polyhaven_download", "sketchfab_search", "sketchfab_download"}
+
 
 def _fake_bpy_modules() -> dict:
     """假 bpy/mathutils/bmesh，只够 handler 模块顶层 import 与类定义。"""
@@ -65,7 +68,7 @@ def addon_public_names() -> set[str]:
 
 def test_server_tools_match_addon_handlers():
     from blender_mcp_pro import tools
-    server_names = tools.tool_names()
+    server_names = tools.tool_names() - SERVER_ONLY
     addon_names = addon_public_names()
     assert server_names == addon_names, (
         f"only in server: {sorted(server_names - addon_names)}\nonly in addon: {sorted(addon_names - server_names)}")
