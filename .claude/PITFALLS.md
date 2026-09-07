@@ -38,3 +38,15 @@
 根因：`MCPServer` 只把 `mcp.server.mcpserver.exceptions.ToolError` 的消息放进 `content`（`is_error=True`），其它异常按 crash 处理、只记日志。
 规则：server 侧工具的所有异常都要转成 `ToolError`——`tools/_base.py::call` 统一包了 Blender 侧错误，不走 `call()` 的工具用 `@surface_errors`。
 涉及：src/blender_mcp_pro/tools/_base.py, tools/assets.py, tests/test_mcp_stdio.py
+
+## [2026-09-07] Windows 上 socket 发完立刻 close 会让对端丢响应
+症状：`tests/test_protocol.py` 的假 Blender 间歇失败（约 8%）：客户端第一次读到 `ConnectionResetError [WinError 10054]`，重连后无人 accept，等满 60s 超时。
+根因：Windows TCP 栈在 `sendall()` 后立即 `close()` 有概率发 RST 而不是 FIN，对端收到 RST 时丢弃已缓冲的数据。
+规则：服务端回完响应不要立刻关；假服务器 `recv()` 到客户端 EOF 再关（真实插件本来就是长连接）。
+涉及：tests/test_protocol.py
+
+## [2026-09-07] Python 3.12 的 Path.is_symlink() 对 Windows junction 返回 False
+症状：`install-addon` 第二次运行时旧安装是 junction，原代码走进 `shutil.rmtree` 分支。
+根因：3.12 起 `os.path.islink` 不再把 junction 当链接，要用 `os.path.isjunction`；rmtree 会拒绝 reparse point（更老版本可能顺着删源码）。
+规则：删安装目录统一走 `cli._remove()`：symlink / junction / 文件用 `unlink()`，只有真实目录才 `rmtree`。
+涉及：src/blender_mcp_pro/cli.py

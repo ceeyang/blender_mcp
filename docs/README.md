@@ -31,7 +31,8 @@ Claude Code ──stdio──▶ MCP server（src/blender_mcp_pro，uv 管理的
 git clone <本仓库> blender_mcp && cd blender_mcp
 uv sync
 uv run blender-mcp-pro install-addon        # 把 addon/ 软链进 Blender 的 extensions/user_default/ 并启用
-                                            # Windows 建不了软链会自动改为复制；也可显式 --copy
+                                            # Windows 没有软链权限时自动改用目录 junction（不需要管理员），
+                                            # 再不行才复制；也可显式 --copy
 ```
 
 `install-addon` 会自动找 Blender：macOS `/Applications/Blender.app`，Windows `C:\Program Files\Blender Foundation\Blender 5.2\blender.exe`，
@@ -70,7 +71,7 @@ BLENDER_MCP_ONLINE_TESTS=1 uv run pytest tests/test_assets.py   # 顺带跑 Poly
 uv run blender-mcp-pro dump-tools > docs/tools.md               # 工具清单
 ```
 
-- 改了插件代码：Blender 里 F3 → "Reload Scripts"（软链安装下源码即生效；复制安装要重跑 `install-addon`）。
+- 改了插件代码：Blender 里 F3 → "Reload Scripts"（软链 / junction 安装下源码即生效；复制安装要重跑 `install-addon`）。
 - 改了 server 代码：Claude Code 里重启该 MCP（`/mcp`）。
 - 新增工具：`handlers/<类目>.py` 里 `@command("name")` + `tools/<类目>.py` 里 `@mcp.tool()`，`tests/test_parity.py` 会盯住两边名字一致。
 - handler 模块**顶层不能调用 bpy**（对账测试用假 bpy 加载插件）；只在函数体里用。

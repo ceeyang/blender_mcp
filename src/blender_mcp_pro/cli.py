@@ -62,22 +62,44 @@ def _blender_python(expr: str) -> int:
     return subprocess.call([BLENDER, "-b", "--python-expr", expr])
 
 
-def install_addon(copy: bool) -> int:
-    EXT_DIR.mkdir(parents=True, exist_ok=True)
-    dst = EXT_DIR / "blender_mcp_pro"
-    if dst.is_symlink() or dst.is_file():
+def _link_dir(src: pathlib.Path, dst: pathlib.Path) -> str:
+    """软链 dst -> src；Windows 无开发者模式/管理员权限时改用目录 junction（不需要特权）；都不行返回 "copied" 让调用方复制。"""
+    try:
+        dst.symlink_to(src, target_is_directory=True)
+        return "linked"
+    except OSError as e:
+        print(f"symlink failed ({e})")
+    if sys.platform.startswith("win"):
+        try:
+            import _winapi
+            _winapi.CreateJunction(str(src), str(dst))
+            return "junctioned"
+        except OSError as e:
+            print(f"junction failed ({e})")
+    print("copying instead")
+    return "copied"
+
+
+def _remove(dst: pathlib.Path) -> None:
+    """删掉旧的安装：软链/junction 只删链接本身，不碰源码；真实目录才 rmtree。"""
+    is_junction = getattr(os.path, "isjunction", lambda _p: False)(dst)
+    if dst.is_symlink() or dst.is_file() or is_junction:
         dst.unlink()
     elif dst.exists():
         shutil.rmtree(dst)
+
+
+def install_addon(copy: bool) -> int:
+    EXT_DIR.mkdir(parents=True, exist_ok=True)
+    dst = EXT_DIR / "blender_mcp_pro"
+    _remove(dst)
+    how = "copied"
     if not copy:
-        try:
-            dst.symlink_to(ADDON_SRC, target_is_directory=True)
-        except OSError as e:  # Windows 无开发者模式/管理员权限时建不了软链
-            print(f"symlink failed ({e}); copying instead")
-            copy = True
+        how = _link_dir(ADDON_SRC, dst)
+        copy = how == "copied"
     if copy:
         shutil.copytree(ADDON_SRC, dst, ignore=shutil.ignore_patterns("__pycache__"))
-    print(f"{'copied' if copy else 'linked'} {ADDON_SRC} -> {dst}")
+    print(f"{how} {ADDON_SRC} -> {dst}")
     if not os.path.exists(BLENDER):
         print(f"Blender not found at {BLENDER}; set BLENDER_MCP_BLENDER, then enable the extension in Blender preferences")
         return 1
@@ -97,10 +119,7 @@ def uninstall_addon() -> int:
         "bpy.ops.wm.save_userpref()"
     )
     dst = EXT_DIR / "blender_mcp_pro"
-    if dst.is_symlink() or dst.is_file():
-        dst.unlink()
-    elif dst.exists():
-        shutil.rmtree(dst)
+    _remove(dst)
     print(f"removed {dst}")
     return 0
 

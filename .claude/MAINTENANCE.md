@@ -27,7 +27,7 @@
 
 ## 进行中与待办
 
-- [ ] GUI 端到端：插件已装进 extensions 目录，需在已打开的 Blender 里启用后跑 `viewport_screenshot` / `undo` 验证。
+- [x] GUI 端到端：2026-09-07 在 Windows GUI Blender 里验证了 `viewport_screenshot` / `render_image` / `frame_objects` / `save_blend`；`undo` 仍待验。
 - [ ] Sketchfab 下载未实测（需要 token）。Poly Haven 联网用例用 `BLENDER_MCP_ONLINE_TESTS=1` 跑。
 - [ ] 159 个工具 schema 占上下文不小；若 Claude Code 侧感觉慢，考虑给 server 加「类目开关」环境变量。
 
@@ -35,6 +35,9 @@
 
 - extensions 目录用软链：`~/Library/Application Support/Blender/5.2/extensions/user_default/blender_mcp_pro → addon/blender_mcp_pro`。
   改源码后 Blender 里 Reload Scripts 即生效。
+- Windows（2026-09-07 实测 Win11 + Blender 5.2.1）：扩展目录在 `%APPDATA%/Blender Foundation/Blender/5.2/extensions/user_default`；
+  普通用户建软链报 WinError 1314，`install-addon` 自动退到目录 junction（`_winapi.CreateJunction`），效果同软链。
+  全套 153 个用例在 Windows 无头 Blender 上通过。
 - `install-addon` 走无头 Blender `save_userpref()`；GUI 开着时退出会覆盖偏好，需在 GUI 里再启用一次。
 - 渲染/下载缓存在 `~/.cache/blender-mcp-pro/`（`renders/`、`hdris/`、`textures/`、`models/`、`sketchfab/`），可随时清。
 - 测试产物在项目 `tmp/`（gitignore）；无头 Blender 日志 `tmp/blender_test.log`。

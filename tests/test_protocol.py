@@ -42,6 +42,14 @@ def fake_blender():
             resp = state["responder"](req)
             if resp is not None:
                 c.sendall(_frame(resp))
+                # Windows：发完立刻 close 有概率让对端收到 RST（WinError 10054）而丢掉响应；
+                # 真实插件是长连接，这里也等客户端先关。
+                c.settimeout(2)
+                try:
+                    while c.recv(4096):
+                        pass
+                except OSError:
+                    pass
             else:
                 threading.Event().wait(2)
 
