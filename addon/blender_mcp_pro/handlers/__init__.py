@@ -7,3 +7,6 @@ from . import lights  # noqa: F401
 from . import modifiers  # noqa: F401
 from . import geometry_nodes  # noqa: F401
 from . import camera  # noqa: F401
+from . import render  # noqa: F401
+from . import io  # noqa: F401
+from . import animation  # noqa: F401
