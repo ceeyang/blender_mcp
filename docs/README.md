@@ -25,14 +25,17 @@ Claude Code ──stdio──▶ MCP server（src/blender_mcp_pro，uv 管理的
 
 ## 安装
 
-前提：macOS，Blender 5.2 LTS 在 `/Applications/Blender.app`，已装 [uv](https://docs.astral.sh/uv/)。
+前提：Blender 5.2 LTS，已装 [uv](https://docs.astral.sh/uv/)。macOS / Windows / Linux 都可以。
 
 ```bash
-cd /Users/panda/Documents/github/blender_mcp
+git clone <本仓库> blender_mcp && cd blender_mcp
 uv sync
-uv run blender-mcp-pro install-addon        # 软链 addon/ 进 ~/Library/Application Support/Blender/5.2/extensions/user_default/ 并启用
-                                            # 软链加载有问题时：uv run blender-mcp-pro install-addon --copy
+uv run blender-mcp-pro install-addon        # 把 addon/ 软链进 Blender 的 extensions/user_default/ 并启用
+                                            # Windows 建不了软链会自动改为复制；也可显式 --copy
 ```
+
+`install-addon` 会自动找 Blender：macOS `/Applications/Blender.app`，Windows `C:\Program Files\Blender Foundation\Blender 5.2\blender.exe`，
+Linux `PATH` 里的 `blender`。装在别处就先设环境变量 `BLENDER_MCP_BLENDER=<blender 可执行文件>`（扩展目录同理 `BLENDER_MCP_EXT_DIR`）。
 
 `install-addon` 会用无头 Blender 启用扩展并保存偏好。**如果此时有 GUI Blender 开着**，它退出时会用自己内存里的偏好覆盖，
 所以在已打开的 Blender 里再手动确认一次：Edit ▸ Preferences ▸ Add-ons，搜 "MCP Pro"，勾上。
@@ -41,9 +44,11 @@ uv run blender-mcp-pro install-addon        # 软链 addon/ 进 ~/Library/Applic
 接入 Claude Code：
 
 ```bash
-claude mcp add --scope user blender-pro -- uv --directory /Users/panda/Documents/github/blender_mcp run blender-mcp-pro serve
+claude mcp add --scope user blender-pro -- uv --directory <仓库绝对路径> run blender-mcp-pro serve
 claude mcp list        # 看到 blender-pro … Connected
 ```
+
+Windows 示例：`claude mcp add --scope user blender-pro -- uv --directory C:\work\blender_mcp run blender-mcp-pro serve`。
 
 其他 MCP 客户端（Cursor 等）用同样的命令 `uv --directory <仓库> run blender-mcp-pro serve`（stdio）。
 
@@ -65,7 +70,7 @@ BLENDER_MCP_ONLINE_TESTS=1 uv run pytest tests/test_assets.py   # 顺带跑 Poly
 uv run blender-mcp-pro dump-tools > docs/tools.md               # 工具清单
 ```
 
-- 改了插件代码：Blender 里 F3 → "Reload Scripts"（软链安装下源码即生效）。
+- 改了插件代码：Blender 里 F3 → "Reload Scripts"（软链安装下源码即生效；复制安装要重跑 `install-addon`）。
 - 改了 server 代码：Claude Code 里重启该 MCP（`/mcp`）。
 - 新增工具：`handlers/<类目>.py` 里 `@command("name")` + `tools/<类目>.py` 里 `@mcp.tool()`，`tests/test_parity.py` 会盯住两边名字一致。
 - handler 模块**顶层不能调用 bpy**（对账测试用假 bpy 加载插件）；只在函数体里用。

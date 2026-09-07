@@ -10,10 +10,11 @@ import pytest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from blender_mcp_pro.cli import default_blender  # noqa: E402
 from blender_mcp_pro.connection import BlenderConnection  # noqa: E402
 from blender_mcp_pro.errors import BlenderTimeout, BlenderUnavailable  # noqa: E402
 
-BLENDER = os.environ.get("BLENDER_MCP_BLENDER", "/Applications/Blender.app/Contents/MacOS/Blender")
+BLENDER = default_blender()
 TMP = ROOT / "tmp"
 
 

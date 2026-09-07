@@ -11,9 +11,51 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 ADDON_SRC = ROOT / "addon" / "blender_mcp_pro"
-EXT_DIR = pathlib.Path.home() / "Library" / "Application Support" / "Blender" / "5.2" / "extensions" / "user_default"
-BLENDER = os.environ.get("BLENDER_MCP_BLENDER", "/Applications/Blender.app/Contents/MacOS/Blender")
+BLENDER_VERSION = "5.2"
 MODULE = "bl_ext.user_default.blender_mcp_pro"
+
+
+def default_blender() -> str:
+    """Blender 可执行文件：优先 BLENDER_MCP_BLENDER，其次各平台默认安装位置，最后 PATH。"""
+    env = os.environ.get("BLENDER_MCP_BLENDER")
+    if env:
+        return env
+    candidates = []
+    if sys.platform == "darwin":
+        candidates = ["/Applications/Blender.app/Contents/MacOS/Blender",
+                      f"/Applications/Blender {BLENDER_VERSION}.app/Contents/MacOS/Blender"]
+    elif sys.platform.startswith("win"):
+        for base in (os.environ.get("ProgramFiles", r"C:\Program Files"), os.environ.get("ProgramW6432", "")):
+            if base:
+                candidates.append(os.path.join(base, "Blender Foundation", f"Blender {BLENDER_VERSION}", "blender.exe"))
+                candidates.append(os.path.join(base, "Blender Foundation", "Blender", "blender.exe"))
+    else:
+        candidates = ["/usr/bin/blender", "/usr/local/bin/blender", "/snap/bin/blender",
+                      os.path.expanduser(f"~/blender-{BLENDER_VERSION}/blender")]
+    for c in candidates:
+        if os.path.exists(c):
+            return c
+    found = shutil.which("blender") or shutil.which("blender.exe")
+    return found or candidates[0]
+
+
+def extensions_dir() -> pathlib.Path:
+    """Blender 用户扩展目录（user_default 仓库）。"""
+    env = os.environ.get("BLENDER_MCP_EXT_DIR")
+    if env:
+        return pathlib.Path(env)
+    home = pathlib.Path.home()
+    if sys.platform == "darwin":
+        base = home / "Library" / "Application Support" / "Blender"
+    elif sys.platform.startswith("win"):
+        base = pathlib.Path(os.environ.get("APPDATA", home / "AppData" / "Roaming")) / "Blender Foundation" / "Blender"
+    else:
+        base = pathlib.Path(os.environ.get("XDG_CONFIG_HOME", home / ".config")) / "blender"
+    return base / BLENDER_VERSION / "extensions" / "user_default"
+
+
+BLENDER = default_blender()
+EXT_DIR = extensions_dir()
 
 
 def _blender_python(expr: str) -> int:
@@ -27,11 +69,18 @@ def install_addon(copy: bool) -> int:
         dst.unlink()
     elif dst.exists():
         shutil.rmtree(dst)
+    if not copy:
+        try:
+            dst.symlink_to(ADDON_SRC, target_is_directory=True)
+        except OSError as e:  # Windows 无开发者模式/管理员权限时建不了软链
+            print(f"symlink failed ({e}); copying instead")
+            copy = True
     if copy:
         shutil.copytree(ADDON_SRC, dst, ignore=shutil.ignore_patterns("__pycache__"))
-    else:
-        dst.symlink_to(ADDON_SRC, target_is_directory=True)
     print(f"{'copied' if copy else 'linked'} {ADDON_SRC} -> {dst}")
+    if not os.path.exists(BLENDER):
+        print(f"Blender not found at {BLENDER}; set BLENDER_MCP_BLENDER, then enable the extension in Blender preferences")
+        return 1
     return _blender_python(
         "import bpy;"
         "bpy.ops.extensions.repo_refresh_all();"
