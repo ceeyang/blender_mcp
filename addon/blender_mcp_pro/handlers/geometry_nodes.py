@@ -152,19 +152,23 @@ def set_gn_modifier_input(object: str, modifier: str, input: str, value):
         v = [float(x) for x in value]
     else:
         v = value
-    # Blender 5.2：修改器输入走 mod.properties.inputs[identifier]，mod[identifier] 已不支持
+    # Blender 5.2：修改器输入是 mod.properties.inputs.<identifier>.value（RNA struct）；
+    # ins[identifier] = v 会把整组结构覆盖成裸值，修改器不会生效。
     ins = mod.properties.inputs
-    if item["identifier"] not in ins.keys():
+    sock = getattr(ins, item["identifier"], None)
+    if sock is None:
         _sync_modifiers(tree)
-        ins = mod.properties.inputs
+        sock = getattr(mod.properties.inputs, item["identifier"], None)
+    if sock is None:
+        raise ToolError(f"modifier has no property for input '{item['name']}' ({item['identifier']})")
     try:
-        ins[item["identifier"]] = v
-    except (TypeError, KeyError) as e:
+        sock.value = v
+    except (TypeError, ValueError) as e:
         raise ToolError(f"cannot set '{item['name']}' ({st}) to {value!r}: {e}") from e
     o.update_tag()
     bpy.context.view_layer.update()
     return {"object": o.name, "modifier": mod.name, "input": item["name"], "identifier": item["identifier"],
-            "value": serialize(mod.properties.inputs[item["identifier"]])}
+            "value": serialize(getattr(mod.properties.inputs, item["identifier"]).value)}
 
 
 @command("build_geometry_node_tree")
