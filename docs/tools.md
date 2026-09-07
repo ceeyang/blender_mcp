@@ -1,0 +1,163 @@
+# 工具清单
+
+共 159 个。由 `uv run blender-mcp-pro dump-tools > docs/tools.md` 生成，不要手改。
+
+- **add_bone**(armature, name, head, tail, parent?, roll?, connect?) — 添加一根骨骼。
+- **add_bone_constraint**(armature, bone, type, settings?) — 给骨骼加约束（IK/COPY_ROTATION/COPY_LOCATION/TRACK_TO/DAMPED_TRACK/LIMIT_ROTATION/STRETCH_TO…）。settings 里 target 给对象名、subtarget 给骨骼名。
+- **add_fcurve_modifier**(object, data_path, type, settings?) — 给 fcurve 加修改器：CYCLES（循环）/NOISE/LIMITS/STEPPED/GENERATOR…；settings 为其属性。
+- **add_geometry_node**(node_group, type, name?, location?, inputs?, properties?) — 添加几何节点。type 可省略前缀（MeshCube = GeometryNodeMeshCube；FunctionNode* 也可）。
+- **add_group_socket**(node_group, name, in_out?, socket_type?, default?) — 给节点组接口加插槽（暴露到修改器面板）。socket_type: Float/Int/Bool/Vector/Color/Object/Collection/Material/Geometry…
+- **add_image_texture**(material, image_path, target?, colorspace?, projection?) — 加载贴图接到 Principled。target: Base Color/Roughness/Metallic/Normal(自动加 Normal Map)/Alpha/Emission Color/Height/AO。
+- **add_modifier**(object, type, name?, settings?) — 添加修改器（SUBSURF/BEVEL/ARRAY/MIRROR/SOLIDIFY/BOOLEAN/…共 83 种）。settings 键为 bpy 属性名，对象引用直接给对象名。
+- **add_nla_strip**(object, action, frame_start, track?, blend_type?) — 在 NLA 轨道上添加动作片段。
+- **add_rigify_metarig**(type?, name?) — 添加 Rigify 元骨架：human/basic_human/basic_quadruped/cat/wolf/horse/shark/bird。
+- **add_shader_node**(material, type, name?, location?, inputs?, properties?) — 添加节点。type 可省略前缀（TexNoise = ShaderNodeTexNoise）；inputs 按插槽名设值；properties 设节点属性（如 blend_type）。
+- **add_uv_map**(object, name?, set_active?) — 新增 UV 层。
+- **append_from_blend**(path, datablock, name, link?) — 从 .blend 追加/链接一个数据块（objects/materials/collections/node_groups/actions/…）。
+- **apply_modifier**(object, modifier) — 应用修改器到网格。
+- **apply_transforms**(objects, location?, rotation?, scale?) — 应用变换到网格数据（Ctrl+A）。
+- **assign_action**(object, action?) — 给对象指定动作（省略则新建）。
+- **assign_material**(object, material, slot?) — 把材质赋给对象的槽位（默认 0，不存在则新建）。
+- **bake_animation**(object, frame_start?, frame_end?, step?, visual_keying?, clear_constraints?) — 把约束/父级/NLA 的运动烘焙成逐帧关键帧。
+- **bake_texture**(object, bake_type, image?, size?, output_path?, margin?, selected_to_active?, cage_extrusion?, samples?) — Cycles 烘焙到贴图。bake_type: DIFFUSE/NORMAL/AO/ROUGHNESS/EMIT/COMBINED/…；无 UV 自动 smart project；output_path 保存 PNG。
+- **batch_add_modifier**(objects, type, settings?) — 批量加修改器。
+- **batch_apply_material**(objects, material) — 批量赋材质。
+- **batch_delete**(objects) — 批量删除。
+- **batch_rename**(objects, prefix?, suffix?, find?, replace?, numbering?) — 批量重命名：前缀/后缀/查找替换/编号。
+- **batch_set_property**(objects, data_path, value) — 批量设置任意属性路径（如 hide_render、data.use_auto_smooth、modifiers['Bevel'].width）。
+- **batch_transform**(objects, location?, rotation?, scale?, relative?) — 批量变换（默认增量）。
+- **build_geometry_node_tree**(node_group, nodes, links?, clear?) — 一次性构建几何节点树（格式同 build_node_tree）。
+- **build_node_tree**(material, nodes, links?, clear?) — 一次性建树：nodes=[{type,name?,location?,inputs?,properties?}]，links=[{from_node,from_socket,to_node,to_socket}]。
+- **check_bone_hierarchy**(armature) — 骨骼层级树、孤立骨、最大深度。
+- **check_bone_naming**(armature, convention?) — 检查 .L/.R 对称命名：缺失镜像、不规范命名。
+- **check_mesh**(name) — 网格体检：顶点/边/面、三角/四边/ngon、非流形边、松散点、重复顶点。
+- **check_rig**(armature) — 骨架综合体检：零长骨、多根、deform 骨无顶点组、未权重/未归一顶点、未应用缩放、约束目标丢失、命名不对称。
+- **create_armature**(name?, location?, bones?) — 新建骨架；bones=[{name, head, tail, parent?, roll?, connect?, deform?}] 一次建骨链。
+- **create_camera**(name?, location?, rotation?, lens?, type?, sensor_width?, clip_start?, clip_end?, set_active?) — 新建相机。type: PERSP/ORTHO；lens 焦距 mm。
+- **create_geometry_nodes**(object, group_name?, modifier_name?) — 给对象新建一个几何节点修改器与节点组（含 Group Input→Output 直通）。
+- **create_image**(name, width?, height?, color?, alpha?, float_buffer?) — 新建空白图像。
+- **create_light**(type, name?, location?, rotation?, energy?, color?, radius?, size?, spot_size?, spot_blend?, target?) — 新建灯光。type: POINT/SUN/SPOT/AREA；energy 瓦；radius 软阴影半径；size 面光尺寸；spot_size 弧度；target 指向对象或坐标。
+- **create_material**(name, base_color?, metallic?, roughness?, emission_color?, emission_strength?, alpha?, ior?, assign_to?) — 新建 Principled BSDF 材质；alpha<1 自动切 BLENDED；assign_to 直接赋给对象。
+- **create_pbr_material**(name, base_color?, roughness?, metallic?, normal?, height?, ao?, assign_to?) — 用一组贴图路径一次建好 PBR 材质。
+- **create_primitive**(type, name?, location?, rotation?, scale?, size?, radius?, depth?, segments?, text?, collection?) — 新建基础物体。type: cube/plane/uv_sphere/ico_sphere/cylinder/cone/torus/circle/monkey/empty/text。
+- **delete_keyframe**(object, data_path, frame, index?) — 删除某帧的关键帧。
+- **delete_material**(name, unlink_only?) — 删除材质（或仅从对象上解除）。
+- **delete_object**(objects, delete_children?) — 删除对象（名字列表或过滤器），可连带子物体。
+- **distribute_objects**(objects, mode?, spacing?, axis?, columns?, radius?, center?) — 排列对象：LINE 沿 axis(默认 X) 等距；GRID 列沿 axis、行沿下一轴，columns 列；CIRCLE 以 axis(默认 Z) 为法线、半径 radius。
+- **duplicate_object**(name, new_name?, linked?, offset?) — 复制对象；linked=true 共享网格数据；offset 为位置偏移。
+- **execute_code**(code, return_var?) — 在 Blender 里执行任意 Python（预置 bpy/bmesh/mathutils/Vector/math）。返回 stdout；return_var 指定要取回的变量名。
+- **export_file**(path, format?, objects?, options?) — 导出到文件（同上格式）。objects 省略则导出全部。
+- **export_for_game**(objects, path, format?, apply_modifiers?, triangulate?, scale?, forward?, up?) — 游戏资产导出：复制→应用修改器→三角化→缩放→导出 GLB/GLTF/FBX/OBJ，原对象不动。
+- **find_unweighted_vertices**(object, threshold?) — 找出没有骨骼权重的顶点。
+- **frame_objects**(camera, objects, margin?) — 沿相机当前朝向后退到能框住这些对象的距离并对准它们。
+- **generate_rigify_rig**(metarig) — 由元骨架生成 Rigify 控制骨架。
+- **get_animation_info**(object?) — 场景帧范围/fps/动作列表；给 object 时附带其 action、fcurve 摘要、NLA 轨道、形态键。
+- **get_api_docs**(path) — 本地查 bpy API 文档。path 形如 bpy.types.Object / bpy.types.Object.location / bpy.ops.mesh.primitive_cube_add。
+- **get_blender_info**() — Blender 版本、Python、当前文件、已启用插件、server 状态、Sketchfab token 是否已配置。
+- **get_bone_influence**(object, vertex_index) — 某顶点受哪些顶点组/骨骼影响及权重。
+- **get_bounding_box**(objects, world?) — 合并包围盒：min/max/center/size。
+- **get_camera_info**(name) — 相机详情（镜头、类型、裁剪、DOF、是否活动）。
+- **get_light_info**(name) — 灯光详情。
+- **get_material_info**(name) — 材质详情：Principled 主要输入值、贴图、渲染设置、使用者。
+- **get_modifier_settings**(object, modifier) — 某修改器的当前值与可设置属性表。
+- **get_node_tree**(node_group) — 节点组全貌：节点、连线、接口（输入/输出插槽）与使用者。
+- **get_node_types**(tree?, filter?) — 枚举可用节点类型及其输入/输出插槽。tree: shader/geometry；filter 子串过滤。
+- **get_object_info**(name) — 对象详情：变换、世界位置、父子、集合、修改器、约束、材质槽、网格统计、自定义属性。
+- **get_render_settings**() — 当前渲染设置（引擎、分辨率、采样、输出、色彩管理）。
+- **get_scene_info**() — 场景概况：名称、帧范围、fps、单位、活动物体/相机、选择、按类型计数、集合树。
+- **import_file**(path, format?, options?, collection?) — 导入文件（obj/fbx/gltf/glb/usd/usda/usdc/stl/ply/abc/blend，按后缀识别）。options 透传给导入算子。返回新增对象名。
+- **import_local_asset**(library, name, type?, link?, file?) — 从本地资产库导入数据块（file 可指定库内 .blend 相对路径）。
+- **insert_keyframe**(object, data_path, frame?, index?, value?) — 插关键帧。data_path 如 location / rotation_euler / scale / hide_render / ["prop"]；给 value 先赋值再打帧；index 指定分量。
+- **insert_keyframes_batch**(object, keys) — 批量打帧：keys=[{frame, location?, rotation?, scale?, <其他 data_path>?}]。
+- **join_objects**(objects, target?) — 合并多个网格对象到 target（默认第一个）。
+- **link_geometry_nodes**(node_group, from_node, from_socket, to_node, to_socket) — 几何节点连线。
+- **link_nodes**(material, from_node, from_socket, to_node, to_socket) — 连线。
+- **list_asset_libraries**() — Blender 偏好里配置的本地资产库。
+- **list_bones**(armature, pose?) — 列出骨骼（head/tail/父子/deform），pose=true 附带姿态变换与约束。
+- **list_cameras**() — 列出相机。
+- **list_constraint_issues**(armature) — 列出骨骼约束问题：目标缺失、subtarget 不存在、IK 链过长、被禁用、influence 为 0。
+- **list_images**() — 列出图像数据块。
+- **list_keyframes**(object, data_path?) — 列出 fcurve 与关键帧（帧、值、插值）。
+- **list_lights**() — 列出灯光及参数。
+- **list_materials**(used_only?) — 列出材质及使用它的对象。
+- **list_modifier_types**(filter?) — 列出全部修改器类型及各自可设置的属性（名称/类型/枚举/默认值）。
+- **list_modifiers**(object) — 列出对象上的修改器栈。
+- **list_node_groups**(type?) — 列出节点组（type: GEOMETRY/SHADER）。
+- **list_objects**(type?, collection?, pattern?, selected?) — 列出场景对象（可按类型 MESH/LIGHT/CAMERA…、集合、名字通配符、是否选中过滤）。
+- **list_render_engines**() — 可用渲染引擎。
+- **list_shader_nodes**(material) — 列出材质节点树：每个节点的类型/位置/输入值/属性，以及全部连线。
+- **list_shape_keys**(object) — 列出形态键。
+- **list_uv_maps**(object) — 列出网格的 UV 层。
+- **manage_collection**(action, name, parent?, objects?, new_name?) — 集合管理。action: create/delete/move/link/unlink/rename。move 会把对象从其它集合移出。
+- **mark_seams**(object, edges?, from_sharp?, clear?) — 标记缝合边：按边索引，或从锐边生成；clear 先清空。
+- **material_from_texture_folder**(folder, name?, assign_to?) — 扫描文件夹，按文件名识别 basecolor/roughness/metallic/normal/height/ao 贴图并建 PBR 材质。
+- **measure_distance**(a, b) — 两点距离；a/b 可为对象名或 [x,y,z]。
+- **mesh_cleanup**(name, recalc_normals?, inside?, merge_by_distance?, threshold?, shade_smooth?, auto_smooth_angle?, dissolve_degenerate?) — 网格清理：重算法线、按距离合并顶点、溶解退化、平滑着色、按角度自动平滑（弧度）。
+- **move_modifier**(object, modifier, index?, direction?) — 调整修改器顺序：给 index，或 direction UP/DOWN/TOP/BOTTOM。
+- **nla_push_down**(object) — 把当前动作推入 NLA 轨道。
+- **normalize_weights**(object, lock_active?, groups?) — 把每个顶点的权重归一化到 1（lock_active 保持活动组不变）。
+- **open_blend**(path, load_ui?) — 打开 .blend 文件。
+- **pack_uv_islands**(object, margin?, rotate?) — 打包 UV 岛。
+- **parent_to_armature**(objects, armature, method?) — 把网格绑定到骨架。method: AUTOMATIC(自动权重)/ENVELOPE/EMPTY_GROUPS/DEFORM。
+- **point_camera_at**(camera, target, use_constraint?) — 相机朝向对象或坐标；use_constraint 用 Track To 持续跟随。
+- **point_light_at**(light, target, use_constraint?) — 让灯光指向对象或坐标；use_constraint 用 Track To 约束持续跟随。
+- **polyhaven_categories**(asset_type?) — Poly Haven 分类及数量。asset_type: hdris/textures/models。
+- **polyhaven_download**(asset_id, asset_type, resolution?, file_format?) — 下载 Poly Haven 资产并导入：HDRI→世界光；纹理→PBR 材质；模型→导入场景。resolution: 1k/2k/4k/8k。
+- **polyhaven_search**(asset_type?, categories?, query?, limit?) — 搜索 Poly Haven 资产（按分类/关键词），按下载量排序。
+- **purge_orphans**() — 清理无用户的孤儿数据块（材质、网格、图片…）。
+- **quick_product_render**(object, output_path, resolution?, samples?, engine?) — 三点光 + 相机取景 + 透明背景，一步渲染产品图。
+- **randomize_transform**(objects, location?, rotation?, scale?, uniform_scale?, seed?) — 随机化变换，各参数为 ± 范围；同 seed 结果可复现。
+- **ray_cast**(origin, direction, distance?) — 从 origin 沿 direction 发射线，返回命中对象/位置/法线/面索引。
+- **redo**() — 重做（Ctrl+Shift+Z）。
+- **remove_bone**(armature, bone) — 删除骨骼。
+- **remove_geometry_node**(node_group, node) — 删除几何节点。
+- **remove_modifier**(object, modifier) — 删除修改器。
+- **remove_shader_node**(material, node) — 删除节点。
+- **remove_uv_map**(object, name) — 删除 UV 层。
+- **rename_object**(name, new_name, rename_data?) — 重命名对象（默认连同其数据块）。
+- **render_animation**(output_path, frame_start?, frame_end?) — 渲染帧序列。output_path 可含 #### 帧号占位（如 /tmp/out/frame_####.png）。
+- **render_image**(output_path?, frame?, return_image?, max_preview_size?) — 渲染当前帧到文件（默认 ~/.cache/blender-mcp-pro/renders/），return_image 时回传缩略图。
+- **reset_pose**(armature, bones?) — 重置姿态到静止位。
+- **save_blend**(path?, compress?) — 保存当前文件（给 path 即另存为）。
+- **save_image**(image, path, format?) — 把 Blender 内的图像保存到磁盘。
+- **scatter_objects**(source, surface, count?, seed?, scale_range?, align_to_normal?, method?) — 把 source 散布到 surface 表面。method: GEOMETRY_NODES（非破坏实例）或 COPIES（真实副本）。
+- **search_local_assets**(library?, type?, query?, assets_only?) — 搜索本地资产库里的数据块。type: objects/materials/node_groups/worlds/collections/meshes/actions。
+- **select_objects**(objects, mode?, active?) — 选择对象。mode: replace/add/remove；active 指定活动对象。
+- **set_active_camera**(name) — 设为场景活动相机。
+- **set_bone**(armature, bone, head?, tail?, roll?, parent?, connect?, deform?, inherit_scale?) — 修改骨骼（parent 传空字符串即清除父级）。
+- **set_camera**(name, lens?, type?, ortho_scale?, clip_start?, clip_end?, shift_x?, shift_y?, dof?) — 修改相机参数。dof: {enabled, focus_object, focus_distance, fstop}。
+- **set_color_management**(view_transform?, look?, exposure?, gamma?) — 色彩管理：view_transform (AgX/Filmic/Standard…)、look、曝光、gamma。
+- **set_color_ramp**(material, node, stops, interpolation?) — 设置 Color Ramp：stops=[{position, color}]，interpolation: LINEAR/EASE/CONSTANT/B_SPLINE/CARDINAL。
+- **set_current_frame**(frame) — 跳到某帧。
+- **set_cursor**(location?, rotation?) — 设置 3D 游标位置/旋转。
+- **set_custom_property**(name, key, value?) — 设置对象自定义属性；value 省略即删除该属性。
+- **set_frame_range**(start, end, fps?) — 设置帧范围与 fps。
+- **set_geometry_node_input**(node_group, node, socket, value) — 设置几何节点输入插槽值。
+- **set_gn_modifier_input**(object, modifier, input, value) — 设置几何节点修改器面板上的输入值（按接口名）。
+- **set_interpolation**(object, mode, easing?, data_path?, frame_range?) — 设置关键帧插值：CONSTANT/LINEAR/BEZIER/SINE/QUAD/…；easing: AUTO/EASE_IN/EASE_OUT/EASE_IN_OUT。
+- **set_light**(name, energy?, color?, radius?, size?, shape?, spot_size?, spot_blend?, use_shadow?, angle?) — 修改灯光参数。shape 用于面光 SQUARE/RECTANGLE/DISK/ELLIPSE；angle 用于太阳光。
+- **set_material_settings**(material, surface_render_method?, backface_culling?, displacement_method?, pass_index?) — 材质渲染设置。surface_render_method: DITHERED/BLENDED；displacement_method: BUMP/DISPLACEMENT/BOTH。
+- **set_modifier**(object, modifier, settings) — 修改修改器属性。
+- **set_node_input**(material, node, socket, value) — 设置某节点某输入插槽的值（插槽可用名字、索引或 'Name#2'）。
+- **set_node_property**(material, node, property, value) — 设置节点属性（operation、blend_type、data_type、image=图片名或路径、node_tree=组名…）。
+- **set_origin**(name, type?) — 设置原点。type: GEOMETRY/CURSOR/CENTER_OF_MASS/CENTER_OF_VOLUME/BOUNDS/GEOMETRY_TO_ORIGIN。
+- **set_parent**(child, parent?, keep_transform?) — 设置父子关系；parent 省略即清除父级。keep_transform 保持世界变换。
+- **set_pose**(armature, bones, keyframe?, frame?) — 设置姿态：bones={骨名: {location?, rotation_euler?|rotation_quaternion?, scale?}}；keyframe 时打关键帧。
+- **set_principled_inputs**(material, inputs) — 批量设置 Principled BSDF 输入。键用 5.2 插槽名：Base Color, Metallic, Roughness, IOR, Alpha, Emission Color,
+- **set_render_settings**(engine?, resolution?, percentage?, samples?, fps?, file_format?, color_mode?, output_path?, film_transparent?, motion_blur?, denoise?, engine_settings?) — 渲染设置。engine: BLENDER_EEVEE/CYCLES/BLENDER_WORKBENCH；engine_settings 透传到 scene.eevee / scene.cycles 属性。
+- **set_shape_key**(object, name, value, frame?) — 设置形态键值（不存在则创建，含 Basis）；给 frame 则同时打关键帧。
+- **set_transform**(name, location?, rotation?, scale?, relative?) — 设置位置/旋转（弧度欧拉）/缩放；relative=true 时为增量（缩放为乘法）。
+- **set_units**(system?, scale_length?, length_unit?, rotation_unit?) — 场景单位。system: METRIC/IMPERIAL/NONE；length_unit 如 METERS/CENTIMETERS；rotation_unit: DEGREES/RADIANS。
+- **set_vertex_group_weights**(object, group, weights?, all?, mode?) — 设置顶点组权重：weights=[[vertex_index, weight], …] 或 all=统一值；mode: REPLACE/ADD/SUBTRACT。组不存在则创建。
+- **set_visibility**(objects, hide_viewport?, hide_render?, hide_select?) — 设置视口/渲染/可选中的隐藏状态。
+- **set_world_lighting**(color?, strength?, hdri_path?, rotation?) — 世界光：背景颜色/强度，或加载 HDRI（rotation 为 Mapping 旋转弧度）。
+- **setup_studio_scene**(subject?, backdrop?, ground?, hdri_path?, camera?) — 一键摄影棚：弧形背景板（或地面）、世界光/HDRI、三点光、相机取景。
+- **setup_three_point_lighting**(target, distance?, height?, key_energy?, fill_ratio?, rim_ratio?, color_temp?) — 围绕目标布 Key/Fill/Rim 三盏面光并对准它；color_temp 为开尔文色温。
+- **sketchfab_download**(uid) — 下载 Sketchfab 模型（glb）并导入。需要在插件偏好里填 Sketchfab API token（或环境变量 SKETCHFAB_API_TOKEN）。
+- **sketchfab_search**(query, categories?, count?, downloadable?) — 搜索 Sketchfab 模型。
+- **turntable_animation**(object, frames?, revolutions?, camera?) — 给对象做旋转展示动画（父级空物体绕 Z 线性旋转 + 循环），并让相机取景。
+- **undo**() — 撤销上一步（Ctrl+Z）。
+- **unlink_geometry_nodes**(node_group, to_node, to_socket) — 断开几何节点某输入上的连线。
+- **unlink_nodes**(material, to_node, to_socket) — 断开某输入插槽上的连线。
+- **unwrap_uv**(object, method?, margin?, angle_limit?, uv_map?) — UV 展开。method: ANGLE_BASED/CONFORMAL/MINIMUM_STRETCH/SMART_PROJECT/CUBE/CYLINDER/SPHERE/LIGHTMAP。
+- **viewport_screenshot**(output_path?, return_image?) — 截取 3D 视口（需要 Blender GUI）。

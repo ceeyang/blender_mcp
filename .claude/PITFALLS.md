@@ -1,0 +1,34 @@
+# PITFALLS — blender-mcp-pro
+
+## [2026-09-07] 无头 Blender 里 bpy.app.timers 不会触发
+症状：`blender -b --python` 起的 TCP server 收到请求后永远不回。
+根因：background 模式没有窗口事件循环，timers 不跑（实测 `timers.register` 后 sleep 0.5s 回调未触发）。
+规则：无头启动脚本自己在主线程 `while: drain_once(); sleep(0.003)`；GUI 才用 timer。
+涉及：addon/blender_mcp_pro/server.py, tests/addon_boot.py
+
+## [2026-09-07] Blender 5.2 几何节点修改器输入不再是 mod["Socket_N"]
+症状：`mod["Socket_2"] = 4.0` 报 `id properties not supported for this type`；改用 `mod.properties.inputs["Socket_2"] = 4.0` 不报错但修改器不生效。
+根因：5.x 把输入挂到 `mod.properties.inputs.<identifier>`（RNA struct，含 `.value/.attribute_name/.type`）；`ins[id] = v` 会把整组结构覆盖成裸值。
+规则：`getattr(mod.properties.inputs, identifier).value = v`；接口新增插槽后先重新赋一次 `mod.node_group` 触发同步。
+涉及：addon/blender_mcp_pro/handlers/geometry_nodes.py
+
+## [2026-09-07] path_resolve 只认双引号
+症状：`obj.path_resolve("modifiers['Bevel']")` → could not be resolved。
+根因：Blender RNA 路径语法固定用 `["name"]`。
+规则：进 `path_resolve` 前把 `['` `']` 换成 `["` `"]`（`handlers/animation.py::_set_path`）。
+
+## [2026-09-07] background 模式没有 undo 栈
+症状：`bpy.ops.ed.undo()` poll 失败 "context is incorrect"。
+规则：`undo/redo` 工具在 `bpy.app.background` 下直接 ToolError；只在 GUI 验证。`undo_push` 本身在无头下不报错。
+
+## [2026-09-07] 不能从当前打开的 .blend 追加数据
+症状：`bpy.data.libraries.load(bpy.data.filepath)` → "Cannot load from the current blend file"。
+规则：`append_from_blend` 先比对路径并报清楚；测试要先 `save_blend` 到另一个文件再追加。
+
+## [2026-09-07] mcp 2.x 改名：FastMCP → MCPServer
+症状：`from mcp.server.fastmcp import FastMCP` 抛 ModuleNotFoundError（uv 解析到 mcp 2.x）。
+规则：`from mcp.server.mcpserver import MCPServer, Image`；`.tool()/.run("stdio")/.list_tools()` 用法不变；`Tool.inputSchema` 仍是驼峰。
+
+## [2026-09-07] 对账测试用假 bpy 加载插件，handler 顶层不能碰 bpy
+症状：某 handler 模块顶层写了 `bpy.types.X.bl_rna...` 常量，`test_parity` 直接 AttributeError。
+规则：枚举/RNA 表一律放函数里并做模块级缓存（见 modifiers.py `_TYPES_CACHE`、nodes_common.py `_base_props()`）。
