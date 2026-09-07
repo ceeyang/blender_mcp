@@ -1,0 +1,20 @@
+# 项目临时产物（见 ~/.claude/CLAUDE.md「临时文件」）
+tmp/
+graphify-out/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+
+# Blender
+*.blend1
+*.blend2
+
+# 本地密钥 / 缓存
+.env
