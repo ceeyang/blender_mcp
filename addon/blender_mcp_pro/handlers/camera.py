@@ -131,8 +131,14 @@ def frame_objects(camera: str, objects, margin: float = 1.1):
         long_fov, short_fov = fov, 2 * math.atan(math.tan(fov / 2) / max(aspect, 1 / aspect))
         dist = r / math.sin(min(long_fov, short_fov) / 2) * margin
     refresh()
-    direction = cam.matrix_world.to_quaternion() @ Vector((0, 0, -1))
-    world_pos = center - direction.normalized() * dist
+    # 从「目标中心 → 相机当前位置」的方向取景：相机放在哪一侧，就从哪一侧看。
+    # 只有相机正好在中心（方向退化）时才沿当前朝向后退——新建相机默认朝 -Z，否则会被推成正俯视。
+    offset = cam.matrix_world.translation - center
+    if offset.length > 1e-4:
+        direction = -offset.normalized()
+    else:
+        direction = (cam.matrix_world.to_quaternion() @ Vector((0, 0, -1))).normalized()
+    world_pos = center - direction * dist
     if cam.parent:
         cam.location = cam.parent.matrix_world.inverted() @ world_pos
     else:

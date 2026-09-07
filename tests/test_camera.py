@@ -30,3 +30,11 @@ def test_point_and_frame(blender):
     call(blender, "set_camera", name="C", type="ORTHO")
     r = call(blender, "frame_objects", camera="C", objects=["Cube"], margin=1.2)
     assert r["ortho_scale"] > 12 and run_py(blender, IN_VIEW % "C") is True
+
+
+def test_frame_keeps_side(blender):
+    """相机放在 +X-Y 象限，取景后仍从该侧看，而不是被推成俯视。"""
+    call(blender, "create_camera", name="C", location=[8, -8, 3])
+    r = call(blender, "frame_objects", camera="C", objects=["Cube"])
+    x, y, z = r["location"]
+    assert x > 0 and y < 0 and 0 < z < abs(x) and run_py(blender, IN_VIEW % "C") is True
