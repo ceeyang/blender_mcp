@@ -124,3 +124,10 @@ def test_objects_filters(blender):
     assert r["deleted"] == ["Light"]
     with pytest.raises(BlenderError):
         call(blender, "delete_object", objects={"pattern": "Nope*"})
+
+
+def test_dimensions_reflect_scale_immediately(blender):
+    """obj_brief 的 dimensions 曾经读 depsgraph 缓存，改完 scale 立刻读会拿到旧值。"""
+    r = call(blender, "set_transform", name="Cube", scale=[3, 1, 1])
+    assert r["dimensions"] == [6, 2, 2], r["dimensions"]
+    assert call(blender, "get_object_info", name="Cube")["dimensions"] == [6, 2, 2]

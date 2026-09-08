@@ -13,7 +13,7 @@ from ..utils import ToolError, find_camera, find_object, link_to_scene, look_at,
 def camera_info(o) -> dict:
     c = o.data
     d = obj_brief(o)
-    d.update({"lens": c.lens, "type": c.type, "sensor_width": c.sensor_width, "sensor_fit": c.sensor_fit,
+    d.update({"lens": c.lens, "projection": c.type, "sensor_width": c.sensor_width, "sensor_fit": c.sensor_fit,
               "ortho_scale": c.ortho_scale, "clip_start": c.clip_start, "clip_end": c.clip_end,
               "shift_x": c.shift_x, "shift_y": c.shift_y, "fov_deg": round(math.degrees(c.angle), 3),
               "dof": {"enabled": c.dof.use_dof, "focus_object": c.dof.focus_object.name if c.dof.focus_object else None,
@@ -117,6 +117,11 @@ def _bounding_sphere(objs):
 
 @command("frame_objects")
 def frame_objects(camera: str, objects, margin: float = 1.1):
+    """把相机沿「目标中心 → 相机当前位置」方向后退到能框住 objects 的距离。
+
+    距离按包围球半径和较短边 FOV 算，所以横向铺开的扁平场景会退得比直觉远
+    （包围球对扁平分布不紧致）。要更紧的构图就自己 set_transform + point_camera_at。
+    """
     cam = find_camera(camera)
     objs = resolve_objects(objects)
     center, r = _bounding_sphere(objs)

@@ -15,7 +15,7 @@ def test_create_set_active(blender):
     assert r["lens"] == 85 and r["is_active"] and r["clip_end"] == 500
     assert call(blender, "get_scene_info")["active_camera"] == "Cam2"
     r = call(blender, "set_camera", name="Cam2", type="ORTHO", ortho_scale=12, dof={"focus_object": "Cube", "fstop": 1.4})
-    assert r["type"] == "ORTHO" and r["ortho_scale"] == 12 and r["dof"] == {"enabled": True, "focus_object": "Cube", "focus_distance": 10, "fstop": 1.4}
+    assert r["type"] == "CAMERA" and r["projection"] == "ORTHO" and r["ortho_scale"] == 12 and r["dof"] == {"enabled": True, "focus_object": "Cube", "focus_distance": 10, "fstop": 1.4}
     assert call(blender, "set_active_camera", name="Camera")["active_camera"] == "Camera"
     assert [c["name"] for c in call(blender, "list_cameras")] == ["Cam2", "Camera"] or len(call(blender, "list_cameras")) == 2
 

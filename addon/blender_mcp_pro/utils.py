@@ -150,6 +150,16 @@ def serialize(value: Any) -> Any:
     return str(value)
 
 
+def dimensions_of(o: bpy.types.Object) -> list[float]:
+    """o.dimensions 依赖 depsgraph 评估：刚改完 scale 立刻读会拿到上一次的值。
+
+    局部包围盒本身不含 object scale，所以手算 bbox_size * scale 就是当前真值，
+    而且是 O(1)，不必为了一个返回值去 update() 整个 view layer。
+    """
+    bb = o.bound_box
+    return [round((max(c[i] for c in bb) - min(c[i] for c in bb)) * o.scale[i], 6) for i in range(3)]
+
+
 def obj_brief(o: bpy.types.Object) -> dict:
     return {
         "name": o.name,
@@ -157,7 +167,7 @@ def obj_brief(o: bpy.types.Object) -> dict:
         "location": vec(o.location),
         "rotation": vec(o.rotation_euler),
         "scale": vec(o.scale),
-        "dimensions": vec(o.dimensions),
+        "dimensions": dimensions_of(o),
         "collections": [c.name for c in o.users_collection],
         "visible": not o.hide_viewport,
         "parent": o.parent.name if o.parent else None,
