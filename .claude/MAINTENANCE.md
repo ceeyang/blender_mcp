@@ -1,6 +1,6 @@
 # MAINTENANCE — blender-mcp-pro 本地自研版
 
-更新：2026-09-07
+更新：2026-09-08
 
 ## 项目快照
 
@@ -18,8 +18,17 @@
 - 所有 mutating handler 执行后由 `registry.dispatch` 统一 `undo_push`；只读工具必须标 `mutates=False`，否则会污染 undo 栈。
 - 同一 handler 里改完 `location` 立刻读 `matrix_world` 是旧值，先 `utils.refresh()`。
 - 返回值必须过 `serialize()`（float 会 round 到 6 位，否则 float32 精度在断言里对不上）。
+- `obj_brief` 的 `dimensions` 不能读 `o.dimensions`（depsgraph 缓存，刚改完 scale 是旧值），
+  用 `utils.dimensions_of()` 手算 bbox×scale。
+- 每个工具必须声明 `annotations`（`tools/_types.py` 的 READ_ONLY/CREATE/UPDATE/DESTRUCTIVE/
+  WRITES_FILE/NET_READ/NET_WRITE 预设）且每个参数带 `Field(description=...)`，
+  由 `tests/test_tool_definitions.py` 强制；描述用英文。
 
 ## 关键决策
+
+- 2026-09-08 按 Glama 的 TDQS 重写全部 159 个工具定义：补 annotations、参数描述、
+  兄弟工具选型指引，描述改英文。动机不是分数，是实测发现模型会因参数语义不明填错值
+  （`relative` 默认值两个工具相反、`randomize_transform` 的 scale 基准是 1 不是 0）。
 
 见 `docs/superpowers/specs/2026-09-07-blender-mcp-pro-design.md` §9（胖 addon + 薄 server、只做 5.2、长度前缀帧、
 资产下载在 server 进程、节点工具按 material / node_group 分两套名字）。补充一条：
@@ -28,7 +37,8 @@
 ## 进行中与待办
 
 - [x] GUI 端到端：2026-09-07 在 Windows GUI Blender 里验证了 `viewport_screenshot` / `render_image` / `frame_objects` / `save_blend`；`undo` 仍待验。
-- [ ] Sketchfab 下载未实测（需要 token）。Poly Haven 联网用例用 `BLENDER_MCP_ONLINE_TESTS=1` 跑。
+- [ ] Sketchfab 下载未真实联网实测（需要 token）；调用链已由 `tests/test_assets_download.py` mock 覆盖。
+      Poly Haven 联网用例用 `BLENDER_MCP_ONLINE_TESTS=1` 跑。
 - [ ] 159 个工具 schema 占上下文不小；若 Claude Code 侧感觉慢，考虑给 server 加「类目开关」环境变量。
 
 ## 数据与部署注意

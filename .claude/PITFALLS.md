@@ -50,3 +50,20 @@
 根因：3.12 起 `os.path.islink` 不再把 junction 当链接，要用 `os.path.isjunction`；rmtree 会拒绝 reparse point（更老版本可能顺着删源码）。
 规则：删安装目录统一走 `cli._remove()`：symlink / junction / 文件用 `unlink()`，只有真实目录才 `rmtree`。
 涉及：src/blender_mcp_pro/cli.py
+
+## [2026-09-08] obj_brief 的 dimensions 读的是 depsgraph 缓存
+
+- 症状：`set_transform(scale=[1.3,1.3,1.3])` 返回的 `dimensions` 仍是旧值，看着像缩放没生效。
+- 根因：`Object.dimensions` 由 depsgraph 评估，同一 handler 里改完 scale 立刻读拿到上一次的结果。
+- 规则：用 `utils.dimensions_of()` 手算 `bound_box 尺寸 × scale`（bound_box 是局部空间、不含 scale），
+  O(1) 且不必 `view_layer.update()` 整个场景。
+- 涉及：`addon/blender_mcp_pro/utils.py`
+
+## [2026-09-08] 静态 arity 检查挡不住"参数个数相同但语义不同"的误改
+
+- 症状：把 `polyhaven.download_asset(asset_id, asset_type, resolution, file_format)` 误写成
+  `polyhaven.download(url, dest, c, headers)`，测试全绿——联网用例默认 skip，函数体从没跑过。
+- 根因：两个函数都存在、都恰好 4 个参数，`hasattr` 和 `inspect.signature().bind()` 都通过。
+- 规则：默认 skip 的联网工具必须另有 mock 调用链测试（`tests/test_assets_download.py`），
+  把网络层和 Blender 连接换成假的，让函数体真的执行一遍。
+- 涉及：`src/blender_mcp_pro/tools/assets.py`、`tests/test_assets_download.py`
