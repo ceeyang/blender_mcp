@@ -63,7 +63,11 @@ def undo() -> dict:
 
 @mcp.tool(annotations=UPDATE)
 def redo() -> dict:
-    """Redo the step that `undo` just reverted (Ctrl+Shift+Z). GUI only, like undo."""
+    """Redo the step that `undo` just reverted, exactly like Ctrl+Shift+Z in the UI.
+
+    Only meaningful straight after an `undo` — any new mutating tool call discards the
+    redo stack. Requires the Blender GUI, like undo.
+    """
     return call("redo")
 
 

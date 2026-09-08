@@ -2,162 +2,162 @@
 
 共 159 个。由 `uv run blender-mcp-pro dump-tools > docs/tools.md` 生成，不要手改。
 
-- **add_bone**(armature, name, head, tail, parent?, roll?, connect?) — 添加一根骨骼。
-- **add_bone_constraint**(armature, bone, type, settings?) — 给骨骼加约束（IK/COPY_ROTATION/COPY_LOCATION/TRACK_TO/DAMPED_TRACK/LIMIT_ROTATION/STRETCH_TO…）。settings 里 target 给对象名、subtarget 给骨骼名。
-- **add_fcurve_modifier**(object, data_path, type, settings?) — 给 fcurve 加修改器：CYCLES（循环）/NOISE/LIMITS/STEPPED/GENERATOR…；settings 为其属性。
-- **add_geometry_node**(node_group, type, name?, location?, inputs?, properties?) — 添加几何节点。type 可省略前缀（MeshCube = GeometryNodeMeshCube；FunctionNode* 也可）。
-- **add_group_socket**(node_group, name, in_out?, socket_type?, default?) — 给节点组接口加插槽（暴露到修改器面板）。socket_type: Float/Int/Bool/Vector/Color/Object/Collection/Material/Geometry…
-- **add_image_texture**(material, image_path, target?, colorspace?, projection?) — 加载贴图接到 Principled。target: Base Color/Roughness/Metallic/Normal(自动加 Normal Map)/Alpha/Emission Color/Height/AO。
-- **add_modifier**(object, type, name?, settings?) — 添加修改器（SUBSURF/BEVEL/ARRAY/MIRROR/SOLIDIFY/BOOLEAN/…共 83 种）。settings 键为 bpy 属性名，对象引用直接给对象名。
-- **add_nla_strip**(object, action, frame_start, track?, blend_type?) — 在 NLA 轨道上添加动作片段。
-- **add_rigify_metarig**(type?, name?) — 添加 Rigify 元骨架：human/basic_human/basic_quadruped/cat/wolf/horse/shark/bird。
-- **add_shader_node**(material, type, name?, location?, inputs?, properties?) — 添加节点。type 可省略前缀（TexNoise = ShaderNodeTexNoise）；inputs 按插槽名设值；properties 设节点属性（如 blend_type）。
-- **add_uv_map**(object, name?, set_active?) — 新增 UV 层。
-- **append_from_blend**(path, datablock, name, link?) — 从 .blend 追加/链接一个数据块（objects/materials/collections/node_groups/actions/…）。
-- **apply_modifier**(object, modifier) — 应用修改器到网格。
-- **apply_transforms**(objects, location?, rotation?, scale?) — 应用变换到网格数据（Ctrl+A）。
-- **assign_action**(object, action?) — 给对象指定动作（省略则新建）。
-- **assign_material**(object, material, slot?) — 把材质赋给对象的槽位（默认 0，不存在则新建）。
-- **bake_animation**(object, frame_start?, frame_end?, step?, visual_keying?, clear_constraints?) — 把约束/父级/NLA 的运动烘焙成逐帧关键帧。
-- **bake_texture**(object, bake_type, image?, size?, output_path?, margin?, selected_to_active?, cage_extrusion?, samples?) — Cycles 烘焙到贴图。bake_type: DIFFUSE/NORMAL/AO/ROUGHNESS/EMIT/COMBINED/…；无 UV 自动 smart project；output_path 保存 PNG。
-- **batch_add_modifier**(objects, type, settings?) — 批量加修改器。
-- **batch_apply_material**(objects, material) — 批量赋材质。
-- **batch_delete**(objects) — 批量删除。
-- **batch_rename**(objects, prefix?, suffix?, find?, replace?, numbering?) — 批量重命名：前缀/后缀/查找替换/编号。
-- **batch_set_property**(objects, data_path, value) — 批量设置任意属性路径（如 hide_render、data.use_auto_smooth、modifiers['Bevel'].width）。
-- **batch_transform**(objects, location?, rotation?, scale?, relative?) — 批量变换（默认增量）。
-- **build_geometry_node_tree**(node_group, nodes, links?, clear?) — 一次性构建几何节点树（格式同 build_node_tree）。
-- **build_node_tree**(material, nodes, links?, clear?) — 一次性建树：nodes=[{type,name?,location?,inputs?,properties?}]，links=[{from_node,from_socket,to_node,to_socket}]。
-- **check_bone_hierarchy**(armature) — 骨骼层级树、孤立骨、最大深度。
-- **check_bone_naming**(armature, convention?) — 检查 .L/.R 对称命名：缺失镜像、不规范命名。
-- **check_mesh**(name) — 网格体检：顶点/边/面、三角/四边/ngon、非流形边、松散点、重复顶点。
-- **check_rig**(armature) — 骨架综合体检：零长骨、多根、deform 骨无顶点组、未权重/未归一顶点、未应用缩放、约束目标丢失、命名不对称。
-- **create_armature**(name?, location?, bones?) — 新建骨架；bones=[{name, head, tail, parent?, roll?, connect?, deform?}] 一次建骨链。
-- **create_camera**(name?, location?, rotation?, lens?, type?, sensor_width?, clip_start?, clip_end?, set_active?) — 新建相机。type: PERSP/ORTHO；lens 焦距 mm。
-- **create_geometry_nodes**(object, group_name?, modifier_name?) — 给对象新建一个几何节点修改器与节点组（含 Group Input→Output 直通）。
-- **create_image**(name, width?, height?, color?, alpha?, float_buffer?) — 新建空白图像。
-- **create_light**(type, name?, location?, rotation?, energy?, color?, radius?, size?, spot_size?, spot_blend?, target?) — 新建灯光。type: POINT/SUN/SPOT/AREA；energy 瓦；radius 软阴影半径；size 面光尺寸；spot_size 弧度；target 指向对象或坐标。
-- **create_material**(name, base_color?, metallic?, roughness?, emission_color?, emission_strength?, alpha?, ior?, assign_to?) — 新建 Principled BSDF 材质；alpha<1 自动切 BLENDED；assign_to 直接赋给对象。
-- **create_pbr_material**(name, base_color?, roughness?, metallic?, normal?, height?, ao?, assign_to?) — 用一组贴图路径一次建好 PBR 材质。
-- **create_primitive**(type, name?, location?, rotation?, scale?, size?, radius?, depth?, segments?, text?, collection?) — 新建基础物体。type: cube/plane/uv_sphere/ico_sphere/cylinder/cone/torus/circle/monkey/empty/text。
-- **delete_keyframe**(object, data_path, frame, index?) — 删除某帧的关键帧。
-- **delete_material**(name, unlink_only?) — 删除材质（或仅从对象上解除）。
-- **delete_object**(objects, delete_children?) — 删除对象（名字列表或过滤器），可连带子物体。
-- **distribute_objects**(objects, mode?, spacing?, axis?, columns?, radius?, center?) — 排列对象：LINE 沿 axis(默认 X) 等距；GRID 列沿 axis、行沿下一轴，columns 列；CIRCLE 以 axis(默认 Z) 为法线、半径 radius。
-- **duplicate_object**(name, new_name?, linked?, offset?) — 复制对象；linked=true 共享网格数据；offset 为位置偏移。
-- **execute_code**(code, return_var?) — 在 Blender 里执行任意 Python（预置 bpy/bmesh/mathutils/Vector/math）。返回 stdout；return_var 指定要取回的变量名。
-- **export_file**(path, format?, objects?, options?) — 导出到文件（同上格式）。objects 省略则导出全部。
-- **export_for_game**(objects, path, format?, apply_modifiers?, triangulate?, scale?, forward?, up?) — 游戏资产导出：复制→应用修改器→三角化→缩放→导出 GLB/GLTF/FBX/OBJ，原对象不动。
-- **find_unweighted_vertices**(object, threshold?) — 找出没有骨骼权重的顶点。
-- **frame_objects**(camera, objects, margin?) — 沿相机当前朝向后退到能框住这些对象的距离并对准它们。
-- **generate_rigify_rig**(metarig) — 由元骨架生成 Rigify 控制骨架。
-- **get_animation_info**(object?) — 场景帧范围/fps/动作列表；给 object 时附带其 action、fcurve 摘要、NLA 轨道、形态键。
-- **get_api_docs**(path) — 本地查 bpy API 文档。path 形如 bpy.types.Object / bpy.types.Object.location / bpy.ops.mesh.primitive_cube_add。
-- **get_blender_info**() — Blender 版本、Python、当前文件、已启用插件、server 状态、Sketchfab token 是否已配置。
-- **get_bone_influence**(object, vertex_index) — 某顶点受哪些顶点组/骨骼影响及权重。
-- **get_bounding_box**(objects, world?) — 合并包围盒：min/max/center/size。
-- **get_camera_info**(name) — 相机详情（镜头、类型、裁剪、DOF、是否活动）。
-- **get_light_info**(name) — 灯光详情。
-- **get_material_info**(name) — 材质详情：Principled 主要输入值、贴图、渲染设置、使用者。
-- **get_modifier_settings**(object, modifier) — 某修改器的当前值与可设置属性表。
-- **get_node_tree**(node_group) — 节点组全貌：节点、连线、接口（输入/输出插槽）与使用者。
-- **get_node_types**(tree?, filter?) — 枚举可用节点类型及其输入/输出插槽。tree: shader/geometry；filter 子串过滤。
-- **get_object_info**(name) — 对象详情：变换、世界位置、父子、集合、修改器、约束、材质槽、网格统计、自定义属性。
-- **get_render_settings**() — 当前渲染设置（引擎、分辨率、采样、输出、色彩管理）。
-- **get_scene_info**() — 场景概况：名称、帧范围、fps、单位、活动物体/相机、选择、按类型计数、集合树。
-- **import_file**(path, format?, options?, collection?) — 导入文件（obj/fbx/gltf/glb/usd/usda/usdc/stl/ply/abc/blend，按后缀识别）。options 透传给导入算子。返回新增对象名。
-- **import_local_asset**(library, name, type?, link?, file?) — 从本地资产库导入数据块（file 可指定库内 .blend 相对路径）。
-- **insert_keyframe**(object, data_path, frame?, index?, value?) — 插关键帧。data_path 如 location / rotation_euler / scale / hide_render / ["prop"]；给 value 先赋值再打帧；index 指定分量。
-- **insert_keyframes_batch**(object, keys) — 批量打帧：keys=[{frame, location?, rotation?, scale?, <其他 data_path>?}]。
-- **join_objects**(objects, target?) — 合并多个网格对象到 target（默认第一个）。
-- **link_geometry_nodes**(node_group, from_node, from_socket, to_node, to_socket) — 几何节点连线。
-- **link_nodes**(material, from_node, from_socket, to_node, to_socket) — 连线。
-- **list_asset_libraries**() — Blender 偏好里配置的本地资产库。
-- **list_bones**(armature, pose?) — 列出骨骼（head/tail/父子/deform），pose=true 附带姿态变换与约束。
-- **list_cameras**() — 列出相机。
-- **list_constraint_issues**(armature) — 列出骨骼约束问题：目标缺失、subtarget 不存在、IK 链过长、被禁用、influence 为 0。
-- **list_images**() — 列出图像数据块。
-- **list_keyframes**(object, data_path?) — 列出 fcurve 与关键帧（帧、值、插值）。
-- **list_lights**() — 列出灯光及参数。
-- **list_materials**(used_only?) — 列出材质及使用它的对象。
-- **list_modifier_types**(filter?) — 列出全部修改器类型及各自可设置的属性（名称/类型/枚举/默认值）。
-- **list_modifiers**(object) — 列出对象上的修改器栈。
-- **list_node_groups**(type?) — 列出节点组（type: GEOMETRY/SHADER）。
-- **list_objects**(type?, collection?, pattern?, selected?) — 列出场景对象（可按类型 MESH/LIGHT/CAMERA…、集合、名字通配符、是否选中过滤）。
-- **list_render_engines**() — 可用渲染引擎。
-- **list_shader_nodes**(material) — 列出材质节点树：每个节点的类型/位置/输入值/属性，以及全部连线。
-- **list_shape_keys**(object) — 列出形态键。
-- **list_uv_maps**(object) — 列出网格的 UV 层。
-- **manage_collection**(action, name, parent?, objects?, new_name?) — 集合管理。action: create/delete/move/link/unlink/rename。move 会把对象从其它集合移出。
-- **mark_seams**(object, edges?, from_sharp?, clear?) — 标记缝合边：按边索引，或从锐边生成；clear 先清空。
-- **material_from_texture_folder**(folder, name?, assign_to?) — 扫描文件夹，按文件名识别 basecolor/roughness/metallic/normal/height/ao 贴图并建 PBR 材质。
-- **measure_distance**(a, b) — 两点距离；a/b 可为对象名或 [x,y,z]。
-- **mesh_cleanup**(name, recalc_normals?, inside?, merge_by_distance?, threshold?, shade_smooth?, auto_smooth_angle?, dissolve_degenerate?) — 网格清理：重算法线、按距离合并顶点、溶解退化、平滑着色、按角度自动平滑（弧度）。
-- **move_modifier**(object, modifier, index?, direction?) — 调整修改器顺序：给 index，或 direction UP/DOWN/TOP/BOTTOM。
-- **nla_push_down**(object) — 把当前动作推入 NLA 轨道。
-- **normalize_weights**(object, lock_active?, groups?) — 把每个顶点的权重归一化到 1（lock_active 保持活动组不变）。
-- **open_blend**(path, load_ui?) — 打开 .blend 文件。
-- **pack_uv_islands**(object, margin?, rotate?) — 打包 UV 岛。
-- **parent_to_armature**(objects, armature, method?) — 把网格绑定到骨架。method: AUTOMATIC(自动权重)/ENVELOPE/EMPTY_GROUPS/DEFORM。
-- **point_camera_at**(camera, target, use_constraint?) — 相机朝向对象或坐标；use_constraint 用 Track To 持续跟随。
-- **point_light_at**(light, target, use_constraint?) — 让灯光指向对象或坐标；use_constraint 用 Track To 约束持续跟随。
-- **polyhaven_categories**(asset_type?) — Poly Haven 分类及数量。asset_type: hdris/textures/models。
-- **polyhaven_download**(asset_id, asset_type, resolution?, file_format?) — 下载 Poly Haven 资产并导入：HDRI→世界光；纹理→PBR 材质；模型→导入场景。resolution: 1k/2k/4k/8k。
-- **polyhaven_search**(asset_type?, categories?, query?, limit?) — 搜索 Poly Haven 资产（按分类/关键词），按下载量排序。
-- **purge_orphans**() — 清理无用户的孤儿数据块（材质、网格、图片…）。
-- **quick_product_render**(object, output_path, resolution?, samples?, engine?) — 三点光 + 相机取景 + 透明背景，一步渲染产品图。
-- **randomize_transform**(objects, location?, rotation?, scale?, uniform_scale?, seed?) — 随机化变换，各参数为 ± 范围；同 seed 结果可复现。
-- **ray_cast**(origin, direction, distance?) — 从 origin 沿 direction 发射线，返回命中对象/位置/法线/面索引。
-- **redo**() — 重做（Ctrl+Shift+Z）。
-- **remove_bone**(armature, bone) — 删除骨骼。
-- **remove_geometry_node**(node_group, node) — 删除几何节点。
-- **remove_modifier**(object, modifier) — 删除修改器。
-- **remove_shader_node**(material, node) — 删除节点。
-- **remove_uv_map**(object, name) — 删除 UV 层。
-- **rename_object**(name, new_name, rename_data?) — 重命名对象（默认连同其数据块）。
-- **render_animation**(output_path, frame_start?, frame_end?) — 渲染帧序列。output_path 可含 #### 帧号占位（如 /tmp/out/frame_####.png）。
-- **render_image**(output_path?, frame?, return_image?, max_preview_size?) — 渲染当前帧到文件（默认 ~/.cache/blender-mcp-pro/renders/），return_image 时回传缩略图。
-- **reset_pose**(armature, bones?) — 重置姿态到静止位。
-- **save_blend**(path?, compress?) — 保存当前文件（给 path 即另存为）。
-- **save_image**(image, path, format?) — 把 Blender 内的图像保存到磁盘。
-- **scatter_objects**(source, surface, count?, seed?, scale_range?, align_to_normal?, method?) — 把 source 散布到 surface 表面。method: GEOMETRY_NODES（非破坏实例）或 COPIES（真实副本）。
-- **search_local_assets**(library?, type?, query?, assets_only?) — 搜索本地资产库里的数据块。type: objects/materials/node_groups/worlds/collections/meshes/actions。
-- **select_objects**(objects, mode?, active?) — 选择对象。mode: replace/add/remove；active 指定活动对象。
-- **set_active_camera**(name) — 设为场景活动相机。
-- **set_bone**(armature, bone, head?, tail?, roll?, parent?, connect?, deform?, inherit_scale?) — 修改骨骼（parent 传空字符串即清除父级）。
-- **set_camera**(name, lens?, type?, ortho_scale?, clip_start?, clip_end?, shift_x?, shift_y?, dof?) — 修改相机参数。dof: {enabled, focus_object, focus_distance, fstop}。
-- **set_color_management**(view_transform?, look?, exposure?, gamma?) — 色彩管理：view_transform (AgX/Filmic/Standard…)、look、曝光、gamma。
-- **set_color_ramp**(material, node, stops, interpolation?) — 设置 Color Ramp：stops=[{position, color}]，interpolation: LINEAR/EASE/CONSTANT/B_SPLINE/CARDINAL。
-- **set_current_frame**(frame) — 跳到某帧。
-- **set_cursor**(location?, rotation?) — 设置 3D 游标位置/旋转。
-- **set_custom_property**(name, key, value?) — 设置对象自定义属性；value 省略即删除该属性。
-- **set_frame_range**(start, end, fps?) — 设置帧范围与 fps。
-- **set_geometry_node_input**(node_group, node, socket, value) — 设置几何节点输入插槽值。
-- **set_gn_modifier_input**(object, modifier, input, value) — 设置几何节点修改器面板上的输入值（按接口名）。
-- **set_interpolation**(object, mode, easing?, data_path?, frame_range?) — 设置关键帧插值：CONSTANT/LINEAR/BEZIER/SINE/QUAD/…；easing: AUTO/EASE_IN/EASE_OUT/EASE_IN_OUT。
-- **set_light**(name, energy?, color?, radius?, size?, shape?, spot_size?, spot_blend?, use_shadow?, angle?) — 修改灯光参数。shape 用于面光 SQUARE/RECTANGLE/DISK/ELLIPSE；angle 用于太阳光。
-- **set_material_settings**(material, surface_render_method?, backface_culling?, displacement_method?, pass_index?) — 材质渲染设置。surface_render_method: DITHERED/BLENDED；displacement_method: BUMP/DISPLACEMENT/BOTH。
-- **set_modifier**(object, modifier, settings) — 修改修改器属性。
-- **set_node_input**(material, node, socket, value) — 设置某节点某输入插槽的值（插槽可用名字、索引或 'Name#2'）。
-- **set_node_property**(material, node, property, value) — 设置节点属性（operation、blend_type、data_type、image=图片名或路径、node_tree=组名…）。
-- **set_origin**(name, type?) — 设置原点。type: GEOMETRY/CURSOR/CENTER_OF_MASS/CENTER_OF_VOLUME/BOUNDS/GEOMETRY_TO_ORIGIN。
-- **set_parent**(child, parent?, keep_transform?) — 设置父子关系；parent 省略即清除父级。keep_transform 保持世界变换。
-- **set_pose**(armature, bones, keyframe?, frame?) — 设置姿态：bones={骨名: {location?, rotation_euler?|rotation_quaternion?, scale?}}；keyframe 时打关键帧。
-- **set_principled_inputs**(material, inputs) — 批量设置 Principled BSDF 输入。键用 5.2 插槽名：Base Color, Metallic, Roughness, IOR, Alpha, Emission Color,
-- **set_render_settings**(engine?, resolution?, percentage?, samples?, fps?, file_format?, color_mode?, output_path?, film_transparent?, motion_blur?, denoise?, engine_settings?) — 渲染设置。engine: BLENDER_EEVEE/CYCLES/BLENDER_WORKBENCH；engine_settings 透传到 scene.eevee / scene.cycles 属性。
-- **set_shape_key**(object, name, value, frame?) — 设置形态键值（不存在则创建，含 Basis）；给 frame 则同时打关键帧。
-- **set_transform**(name, location?, rotation?, scale?, relative?) — 设置位置/旋转（弧度欧拉）/缩放；relative=true 时为增量（缩放为乘法）。
-- **set_units**(system?, scale_length?, length_unit?, rotation_unit?) — 场景单位。system: METRIC/IMPERIAL/NONE；length_unit 如 METERS/CENTIMETERS；rotation_unit: DEGREES/RADIANS。
-- **set_vertex_group_weights**(object, group, weights?, all?, mode?) — 设置顶点组权重：weights=[[vertex_index, weight], …] 或 all=统一值；mode: REPLACE/ADD/SUBTRACT。组不存在则创建。
-- **set_visibility**(objects, hide_viewport?, hide_render?, hide_select?) — 设置视口/渲染/可选中的隐藏状态。
-- **set_world_lighting**(color?, strength?, hdri_path?, rotation?) — 世界光：背景颜色/强度，或加载 HDRI（rotation 为 Mapping 旋转弧度）。
-- **setup_studio_scene**(subject?, backdrop?, ground?, hdri_path?, camera?) — 一键摄影棚：弧形背景板（或地面）、世界光/HDRI、三点光、相机取景。
-- **setup_three_point_lighting**(target, distance?, height?, key_energy?, fill_ratio?, rim_ratio?, color_temp?) — 围绕目标布 Key/Fill/Rim 三盏面光并对准它；color_temp 为开尔文色温。
-- **sketchfab_download**(uid) — 下载 Sketchfab 模型（glb）并导入。需要在插件偏好里填 Sketchfab API token（或环境变量 SKETCHFAB_API_TOKEN）。
-- **sketchfab_search**(query, categories?, count?, downloadable?) — 搜索 Sketchfab 模型。
-- **turntable_animation**(object, frames?, revolutions?, camera?) — 给对象做旋转展示动画（父级空物体绕 Z 线性旋转 + 循环），并让相机取景。
-- **undo**() — 撤销上一步（Ctrl+Z）。
-- **unlink_geometry_nodes**(node_group, to_node, to_socket) — 断开几何节点某输入上的连线。
-- **unlink_nodes**(material, to_node, to_socket) — 断开某输入插槽上的连线。
-- **unwrap_uv**(object, method?, margin?, angle_limit?, uv_map?) — UV 展开。method: ANGLE_BASED/CONFORMAL/MINIMUM_STRETCH/SMART_PROJECT/CUBE/CYLINDER/SPHERE/LIGHTMAP。
-- **viewport_screenshot**(output_path?, return_image?) — 截取 3D 视口（需要 Blender GUI）。
+- **add_bone**(armature, name, head, tail, parent?, roll?, connect?) — Add one bone to an existing armature.
+- **add_bone_constraint**(armature, bone, type, settings?) — Add a constraint to a pose bone, making it follow, copy or be limited by something else.
+- **add_fcurve_modifier**(object, data_path, type, settings?) — Attach a procedural modifier to an F-curve, changing it without adding keyframes.
+- **add_geometry_node**(node_group, type, name?, location?, inputs?, properties?) — Add one node to a geometry node group, with its values set in the same call.
+- **add_group_socket**(node_group, name, in_out?, socket_type?, default?) — Expose a parameter on a geometry node group so it appears on the object's modifier panel.
+- **add_image_texture**(material, image_path, target?, colorspace?, projection?) — Load an image and wire it into one Principled BSDF input, adding whatever helper node that input needs.
+- **add_modifier**(object, type, name?, settings?) — Add one modifier to the end of an object's stack and configure it in the same call.
+- **add_nla_strip**(object, action, frame_start, track?, blend_type?) — Place an existing action on the NLA timeline as a strip at a given frame.
+- **add_rigify_metarig**(type?, name?) — Add a Rigify metarig — a pre-built template skeleton you position to match your character.
+- **add_shader_node**(material, type, name?, location?, inputs?, properties?) — Add one node to a material's tree and set its values in the same call.
+- **add_uv_map**(object, name?, set_active?) — Add an empty UV map to a mesh.
+- **append_from_blend**(path, datablock, name, link?) — Pull a specific object, material or node group out of another .blend file.
+- **apply_modifier**(object, modifier) — Permanently bake a modifier's result into the mesh and remove it from the stack.
+- **apply_transforms**(objects, location?, rotation?, scale?) — Bake an object's transform into its mesh data, resetting the transform to identity (Blender's Ctrl+A).
+- **assign_action**(object, action?) — Set which action (a named container of keyframes) is active on an object.
+- **assign_material**(object, material, slot?) — Put an existing material into one object's material slot, replacing whatever was there.
+- **bake_animation**(object, frame_start?, frame_end?, step?, visual_keying?, clear_constraints?) — Convert constraint- and parent-driven motion into explicit keyframes on every frame.
+- **bake_texture**(object, bake_type, image?, size?, output_path?, margin?, selected_to_active?, cage_extrusion?, samples?) — Bake surface detail or lighting into a texture image, temporarily switching the renderer to Cycles.
+- **batch_add_modifier**(objects, type, settings?) — Add the same modifier, with the same settings, to many objects at once.
+- **batch_apply_material**(objects, material) — Put one existing material into slot 0 of many objects, replacing what was there.
+- **batch_delete**(objects) — Permanently delete many objects from the scene, returning the names removed.
+- **batch_rename**(objects, prefix?, suffix?, find?, replace?, numbering?) — Rename many objects at once by prefix, suffix, find/replace and/or numbering.
+- **batch_set_property**(objects, data_path, value) — Set any bpy property, by path, on many objects — the escape hatch for what other tools don't cover.
+- **batch_transform**(objects, location?, rotation?, scale?, relative?) — Move, rotate and scale many objects in one call, relative to where each already is.
+- **build_geometry_node_tree**(node_group, nodes, links?, clear?) — Build a whole geometry node tree — many nodes and their links — in a single call.
+- **build_node_tree**(material, nodes, links?, clear?) — Create many nodes and their links in a single call — the efficient way to build a shader.
+- **check_bone_hierarchy**(armature) — Report the bone parent tree, plus any orphan bones and multiple roots.
+- **check_bone_naming**(armature, convention?) — Check bone names against the left/right convention, flagging bones whose mirror counterpart is missing.
+- **check_mesh**(name) — Diagnose one mesh: vertex/edge/face counts, triangle count, quads vs n-gons, non-manifold edges, loose vertices and edges, and duplicate vertices.
+- **check_rig**(armature) — Run a full health check on a rig and report every problem found, each with a severity, a code and a hint on how to fix it.
+- **create_armature**(name?, location?, bones?) — Create an armature and its whole bone chain in one call.
+- **create_camera**(name?, location?, rotation?, lens?, type?, sensor_width?, clip_start?, clip_end?, set_active?) — Create a camera and, by default, make it the one that renders.
+- **create_geometry_nodes**(object, group_name?, modifier_name?) — Create a geometry node group and attach it to an object as a NODES modifier, pre-wired with Group Input and Group Output.
+- **create_image**(name, width?, height?, color?, alpha?, float_buffer?) — Create a blank in-memory image datablock to bake or paint into.
+- **create_light**(type, name?, location?, rotation?, energy?, color?, radius?, size?, spot_size?, spot_blend?, target?) — Create a light and optionally aim it at something in the same call.
+- **create_material**(name, base_color?, metallic?, roughness?, emission_color?, emission_strength?, alpha?, ior?, assign_to?) — Create a Principled BSDF material from plain colour and surface values.
+- **create_pbr_material**(name, base_color?, roughness?, metallic?, normal?, height?, ao?, assign_to?) — Build a full PBR material from a set of texture files in one call, wiring each map to the right input.
+- **create_primitive**(type, name?, location?, rotation?, scale?, size?, radius?, depth?, segments?, text?, collection?) — Add one mesh primitive, empty or text object to the scene.
+- **delete_keyframe**(object, data_path, frame, index?) — Remove one keyframe, letting the surrounding keys interpolate through the gap.
+- **delete_material**(name, unlink_only?) — Remove a material from every object that uses it and delete it from the file.
+- **delete_object**(objects, delete_children?) — Permanently delete objects from the file, returning the names removed.
+- **distribute_objects**(objects, mode?, spacing?, axis?, columns?, radius?, center?) — Arrange objects into a line, grid or circle at exact positions, overwriting their locations.
+- **duplicate_object**(name, new_name?, linked?, offset?) — Copy one object, keeping its modifiers, materials and transform.
+- **execute_code**(code, return_var?) — Run arbitrary Python inside Blender — the escape hatch when no other tool fits.
+- **export_file**(path, format?, objects?, options?) — Export objects (or the whole scene) to an interchange format on disk.
+- **export_for_game**(objects, path, format?, apply_modifiers?, triangulate?, scale?, forward?, up?) — Export objects game-ready: modifiers applied, triangulated, scaled and axis-converted.
+- **find_unweighted_vertices**(object, threshold?) — Find vertices that no bone influences, returning their indices.
+- **frame_objects**(camera, objects, margin?) — Move a camera back along its current direction from the subject until the objects fit in frame, then aim it at them.
+- **generate_rigify_rig**(metarig) — Generate a full production rig from a Rigify metarig, with IK/FK controls, custom shapes and switches.
+- **get_animation_info**(object?) — Summarise animation state: scene frame range and fps, plus an object's action, F-curves and keyframe counts.
+- **get_api_docs**(path) — Look up Blender's own API documentation from the running build — descriptions, types, enum values, defaults and ranges.
+- **get_blender_info**() — Report the Blender build and this add-on's state: version, Python, binary path, current .blend, enabled add-ons, MCP server status, and whether a Sketchfab token is configured.
+- **get_bone_influence**(object, vertex_index) — Show which bones influence one specific vertex, and by how much.
+- **get_bounding_box**(objects, world?) — Get the combined bounding box of one or more objects: min, max, center and size.
+- **get_camera_info**(name) — Get one camera's full settings: focal length, horizontal FOV in degrees, sensor size, projection type, clip range, lens shift, depth of field, and whether it is active.
+- **get_light_info**(name) — Get one light's full settings, including the parameters specific to its type (spot cone, area size, sun angle).
+- **get_material_info**(name) — Inspect one material: the main Principled BSDF input values, image textures with their file paths, node count, render settings, and which objects use it.
+- **get_modifier_settings**(object, modifier) — Read one modifier's current values plus the full table of properties it accepts.
+- **get_node_tree**(node_group) — Dump a geometry node group: every node with its inputs and properties, all links, and the group's exposed interface sockets.
+- **get_node_types**(tree?, filter?) — Search the node types available in this Blender build, each with its exact input and output socket names.
+- **get_object_info**(name) — Get everything about one object: local and world transform, parent and children, collections, modifier and constraint stacks, material slots, custom properties, and type-specific data (mesh counts and UV maps, camera lens, light energy, bone count).
+- **get_render_settings**() — Read the current render configuration: engine, resolution and percentage, fps, frame range, output path and format, samples for both EEVEE and Cycles, denoising, colour management and the active camera.
+- **get_scene_info**() — Survey the whole scene: name, frame range, fps, units, render engine, active object and camera, object counts by type, and the collection tree.
+- **import_file**(path, format?, options?, collection?) — Import a 3D file into the current scene, returning the names of the objects it created.
+- **import_local_asset**(library, name, type?, link?, file?) — Bring an object, material or node group from a local asset library into the current scene.
+- **insert_keyframe**(object, data_path, frame?, index?, value?) — Record one keyframe on one property, optionally setting the value first.
+- **insert_keyframes_batch**(object, keys) — Lay down a whole sequence of transform keyframes in one call.
+- **join_objects**(objects, target?) — Merge several mesh objects into one, destroying all of them except the target.
+- **link_geometry_nodes**(node_group, from_node, from_socket, to_node, to_socket) — Connect one geometry node's output to another's input.
+- **link_nodes**(material, from_node, from_socket, to_node, to_socket) — Connect one node's output to another node's input.
+- **list_asset_libraries**() — List the asset libraries configured in this Blender's preferences, with their names and folder paths.
+- **list_bones**(armature, pose?) — List an armature's bones with head, tail, parent and length.
+- **list_cameras**() — List every camera with its transform, lens, clipping, depth of field, and which one is the scene's active camera.
+- **list_constraint_issues**(armature) — List bone constraints that are broken: empty targets, subtargets naming bones that don't exist, out-of-range IK chain lengths.
+- **list_images**() — List every image datablock in the file with its size, source path and user count.
+- **list_keyframes**(object, data_path?) — List an object's F-curves and every keyframe on them, with frame numbers, values and interpolation.
+- **list_lights**() — List every light with its type, position, energy, colour and shape parameters.
+- **list_materials**(used_only?) — List every material in the file with its node count and which objects use it.
+- **list_modifier_types**(filter?) — List every modifier type Blender offers, each with the properties you can set on it (name, type, enum values, default).
+- **list_modifiers**(object) — List an object's modifier stack in evaluation order, with each modifier's name, type and viewport/render visibility.
+- **list_node_groups**(type?) — List the node groups in the file — the reusable trees that geometry-node modifiers and shader groups point at.
+- **list_objects**(type?, collection?, pattern?, selected?) — List objects with their transform, dimensions, collections and visibility, sorted by name.
+- **list_render_engines**() — List the render engines available in this Blender build, including any from add-ons.
+- **list_shader_nodes**(material) — Dump a material's whole node tree: every node with its type, position, current input values and settable properties, plus all the links between them.
+- **list_shape_keys**(object) — List a mesh's shape keys with their current values and ranges.
+- **list_uv_maps**(object) — List a mesh's UV maps and which one is active.
+- **manage_collection**(action, name, parent?, objects?, new_name?) — Create, delete, rename collections and move objects between them.
+- **mark_seams**(object, edges?, from_sharp?, clear?) — Mark or clear UV seams — the edges along which unwrapping cuts the mesh open.
+- **material_from_texture_folder**(folder, name?, assign_to?) — Scan a folder of PBR textures, work out what each map is from its filename, and wire them into one material.
+- **measure_distance**(a, b) — Measure the straight-line distance between two objects or points, also returning the per-axis delta.
+- **mesh_cleanup**(name, recalc_normals?, inside?, merge_by_distance?, threshold?, shade_smooth?, auto_smooth_angle?, dissolve_degenerate?) — Repair and tidy a mesh: recalculate normals, weld doubles, dissolve degenerate geometry, and set smooth shading.
+- **move_modifier**(object, modifier, index?, direction?) — Reorder a modifier within the stack, which changes the result.
+- **nla_push_down**(object) — Push the active action down into a new NLA strip, freeing the object for a new animation.
+- **normalize_weights**(object, lock_active?, groups?) — Rescale each vertex's weights so they sum to 1.0 across all bones.
+- **open_blend**(path, load_ui?) — Open a .blend file, DISCARDING everything currently in the scene.
+- **pack_uv_islands**(object, margin?, rotate?) — Rearrange existing UV islands to use the 0-1 UV square more efficiently.
+- **parent_to_armature**(objects, armature, method?) — Skin meshes to an armature so they deform when it is posed.
+- **point_camera_at**(camera, target, use_constraint?) — Rotate a camera to look at an object or a point, leaving its position alone.
+- **point_light_at**(light, target, use_constraint?) — Rotate a light to point at an object or a coordinate.
+- **polyhaven_categories**(asset_type?) — List Poly Haven's categories for one asset type, with how many assets each holds.
+- **polyhaven_download**(asset_id, asset_type, resolution?, file_format?) — Download a Poly Haven asset and install it into the scene: HDRIs become the world lighting, textures become a PBR material, models are imported as objects.
+- **polyhaven_search**(asset_type?, categories?, query?, limit?) — Search Poly Haven's free CC0 asset library, returning asset ids you can pass to polyhaven_download.
+- **purge_orphans**() — Permanently delete datablocks with zero users — meshes, materials, images and node groups left behind by deletions.
+- **quick_product_render**(object, output_path, resolution?, samples?, engine?) — Light, frame and render one object in a single call, returning the image to look at.
+- **randomize_transform**(objects, location?, rotation?, scale?, uniform_scale?, seed?) — Jitter position, rotation and scale of many objects by random amounts around their current values.
+- **ray_cast**(origin, direction, distance?) — Fire a ray into the scene and report the first surface it hits: object, hit point, surface normal and face index.
+- **redo**() — Redo the step that `undo` just reverted, exactly like Ctrl+Shift+Z in the UI.
+- **remove_bone**(armature, bone) — Delete a bone from an armature.
+- **remove_geometry_node**(node_group, node) — Delete a node from a geometry node group along with its links.
+- **remove_modifier**(object, modifier) — Delete a modifier from the stack, discarding its effect.
+- **remove_shader_node**(material, node) — Delete a node from a material's tree, along with every link attached to it.
+- **remove_uv_map**(object, name) — Delete a UV map from a mesh, discarding its layout.
+- **rename_object**(name, new_name, rename_data?) — Rename one object, by default renaming its data datablock to match.
+- **render_animation**(output_path, frame_start?, frame_end?) — Render a range of frames to an image sequence or video file.
+- **render_image**(output_path?, frame?, return_image?, max_preview_size?) — Render one frame through the active camera, write it to disk, and optionally return a preview image to look at.
+- **reset_pose**(armature, bones?) — Return bones to their rest pose, clearing pose location, rotation and scale.
+- **save_blend**(path?, compress?) — Save the current scene to a .blend file.
+- **save_image**(image, path, format?) — Write an image datablock to a file on disk.
+- **scatter_objects**(source, surface, count?, seed?, scale_range?, align_to_normal?, method?) — Scatter many instances of one object across the surface of another — grass, rocks, debris.
+- **search_local_assets**(library?, type?, query?, assets_only?) — Search the user's local asset libraries for objects, materials or node groups to reuse.
+- **select_objects**(objects, mode?, active?) — Change which objects are selected and which one is active.
+- **set_active_camera**(name) — Choose which camera the scene renders through.
+- **set_bone**(armature, bone, head?, tail?, roll?, parent?, connect?, deform?, inherit_scale?) — Change a bone's rest position, roll, parenting or deform behaviour.
+- **set_camera**(name, lens?, type?, ortho_scale?, clip_start?, clip_end?, shift_x?, shift_y?, dof?) — Change lens, projection, clipping, lens shift or depth of field on an existing camera.
+- **set_color_management**(view_transform?, look?, exposure?, gamma?) — Set tone mapping and exposure for renders.
+- **set_color_ramp**(material, node, stops, interpolation?) — Define a Color Ramp node's gradient stops in one call.
+- **set_current_frame**(frame) — Move the playhead to a specific frame, evaluating the scene at that point in time.
+- **set_cursor**(location?, rotation?) — Move Blender's 3D cursor, the reference point several operations snap to.
+- **set_custom_property**(name, key, value?) — Attach, change or delete an arbitrary key/value on an object.
+- **set_frame_range**(start, end, fps?) — Set the scene's playback and render frame range, and optionally its frame rate.
+- **set_geometry_node_input**(node_group, node, socket, value) — Set the default value of a socket on a node INSIDE the tree.
+- **set_gn_modifier_input**(object, modifier, input, value) — Set an exposed geometry-nodes parameter on one object's modifier.
+- **set_interpolation**(object, mode, easing?, data_path?, frame_range?) — Change how the animation interpolates between existing keyframes.
+- **set_light**(name, energy?, color?, radius?, size?, shape?, spot_size?, spot_blend?, use_shadow?, angle?) — Adjust an existing light's intensity, colour, softness and type-specific parameters.
+- **set_material_settings**(material, surface_render_method?, backface_culling?, displacement_method?, pass_index?) — Set how a material is rendered: transparency method, backface culling, displacement mode and pass index.
+- **set_modifier**(object, modifier, settings) — Change properties on an existing modifier.
+- **set_node_input**(material, node, socket, value) — Set the default value of one node input socket.
+- **set_node_property**(material, node, property, value) — Set a node property — a setting on the node itself rather than one of its input sockets.
+- **set_origin**(name, type?) — Move an object's origin point without moving the object on screen.
+- **set_parent**(child, parent?, keep_transform?) — Parent one object to another, or clear its parent, without moving it on screen.
+- **set_pose**(armature, bones, keyframe?, frame?) — Pose several bones at once, optionally keyframing the result.
+- **set_principled_inputs**(material, inputs) — Set several Principled BSDF inputs on an existing material in one call.
+- **set_render_settings**(engine?, resolution?, percentage?, samples?, fps?, file_format?, color_mode?, output_path?, film_transparent?, motion_blur?, denoise?, engine_settings?) — Configure the renderer: engine, resolution, sampling, output format and quality options.
+- **set_shape_key**(object, name, value, frame?) — Set a shape key's blend value, creating the key if needed, and optionally keyframe it.
+- **set_transform**(name, location?, rotation?, scale?, relative?) — Set one object's location, rotation and/or scale, absolutely by default.
+- **set_units**(system?, scale_length?, length_unit?, rotation_unit?) — Set the scene's unit system and display units.
+- **set_vertex_group_weights**(object, group, weights?, all?, mode?) — Set vertex group weights, controlling how strongly each bone pulls each vertex.
+- **set_visibility**(objects, hide_viewport?, hide_render?, hide_select?) — Hide or show objects in the viewport, in renders, and for selection — independently.
+- **set_world_lighting**(color?, strength?, hdri_path?, rotation?) — Set the world background: a flat colour, or an HDRI environment map that lights the whole scene.
+- **setup_studio_scene**(subject?, backdrop?, ground?, hdri_path?, camera?) — Build a product-photography studio: backdrop, ground, lighting and a framed camera in one call.
+- **setup_three_point_lighting**(target, distance?, height?, key_energy?, fill_ratio?, rim_ratio?, color_temp?) — Build a complete three-point lighting rig — key, fill and rim — around an object, aimed and balanced.
+- **sketchfab_download**(uid) — Download a Sketchfab model as GLB and import it into the current scene.
+- **sketchfab_search**(query, categories?, count?, downloadable?) — Search Sketchfab for 3D models, returning uids for sketchfab_download.
+- **turntable_animation**(object, frames?, revolutions?, camera?) — Set up a looping turntable: the object rotates a full turn with linear interpolation and a cycling F-curve.
+- **undo**() — Undo the last operation, exactly like Ctrl+Z in the UI.
+- **unlink_geometry_nodes**(node_group, to_node, to_socket) — Remove the links feeding one input socket, restoring its default value.
+- **unlink_nodes**(material, to_node, to_socket) — Remove every link feeding one input socket, exposing its default value again.
+- **unwrap_uv**(object, method?, margin?, angle_limit?, uv_map?) — Compute UV coordinates for a mesh so textures can be applied to it.
+- **viewport_screenshot**(output_path?, return_image?) — Grab what the user is currently looking at in the 3D viewport, including their view angle, overlays and gizmos.
